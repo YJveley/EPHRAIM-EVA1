@@ -3098,7 +3098,7 @@ function openEval(eeName){
   document.getElementById('evalName').textContent=eeName;
   document.getElementById('evalMeta').textContent=(te?`${te.dept} · ${te.role}`:'')+' · '+CT.rel;
   const max=CT.maxScore;
-  const prev=getEvals()?.[CU.name]?.[eeName];
+  const prev=getCache()?.[CU.name]?.[eeName];
   const init=prev?prev.score:0;
   document.getElementById('scoreNum').textContent=init;
   document.getElementById('scoreMaxLbl').textContent=`최대 ${max}점`;
