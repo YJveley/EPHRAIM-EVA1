@@ -2942,17 +2942,74 @@ const CRITERIA_LEADER={
 const LEADER_ROLES=["본부장","부본부장","실장","이사","파트장","소장"];
 function isLeader(r){return LEADER_ROLES.includes(r);}
 
-const EV_KEY='ephraim_evals_v2',NICK_KEY='ephraim_nicks_v2';
-function getEvals(){try{return JSON.parse(localStorage.getItem(EV_KEY))||{};}catch{return{};}}
-function getNicks(){try{return JSON.parse(localStorage.getItem(NICK_KEY))||{};}catch{return{};}}
-function saveEvalData(ev,ee,score,comment){
-  const d=getEvals();if(!d[ev])d[ev]={};
-  d[ev][ee]={score,comment,ts:Date.now()};
-  localStorage.setItem(EV_KEY,JSON.stringify(d));
-}
-function saveNickData(name,nick){const n=getNicks();n[name]=nick;localStorage.setItem(NICK_KEY,JSON.stringify(n));}
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwlEbXBvN4EqhUOyghGAvfN1BojpUCuWaRGfHQeyQJhFPrERNleqeexW0yuOobHs6fpHg/exec";
+
+// ── 로컬 캐시 (제출 여부 추적용, 실제 데이터는 시트에 저장) ──
+const CACHE_KEY = 'ephraim_cache_v3';
+const NICK_KEY  = 'ephraim_nicks_v3';
+
+function getCache(){try{return JSON.parse(localStorage.getItem(CACHE_KEY))||{}}catch{return{}}}
+function getNicks(){try{return JSON.parse(localStorage.getItem(NICK_KEY))||{}}catch{return{}}}
 function getMyNick(n){return getNicks()[n]||'';}
-function hasEval(ev,ee){return !!(getEvals()?.[ev]?.[ee]);}
+function hasEval(ev,ee){return !!(getCache()?.[ev]?.[ee]);}
+
+function markEvalDone(ev,ee,score,comment){
+  const d=getCache();
+  if(!d[ev])d[ev]={};
+  d[ev][ee]={score,comment,ts:Date.now()};
+  localStorage.setItem(CACHE_KEY,JSON.stringify(d));
+}
+function saveNickLocal(name,nick){
+  const n=getNicks();n[name]=nick;
+  localStorage.setItem(NICK_KEY,JSON.stringify(n));
+}
+
+// ── Google Sheets 전송 ──
+async function saveEvalData(ev, ee, score, comment, dept, rel, maxScore){
+  const payload = {
+    type: "eval",
+    evaluator: ev, evaluatee: ee,
+    dept, rel, score, maxScore,
+    comment: comment||""
+  };
+  try{
+    await fetch(GAS_URL, {
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain"},
+      body: JSON.stringify(payload)
+    });
+  }catch(e){console.warn("시트 전송 실패",e);}
+  markEvalDone(ev, ee, score, comment);
+}
+
+async function saveNickData(name, nick){
+  const payload = {type:"nick", name, nick};
+  try{
+    await fetch(GAS_URL, {
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain"},
+      body: JSON.stringify(payload)
+    });
+  }catch(e){console.warn("닉네임 전송 실패",e);}
+  saveNickLocal(name, nick);
+}
+
+// ── 관리자: 시트에서 데이터 불러오기 ──
+async function fetchAdminData(){
+  try{
+    const res = await fetch(GAS_URL + "?type=all", {
+      method:"GET",
+      mode:"cors"
+    });
+    const data = await res.json();
+    return data;
+  }catch(e){
+    console.warn("관리자 데이터 로드 실패",e);
+    return [];
+  }
+}
 
 let CU=null,CT=null,curAdminTab='rank';
 
@@ -2983,12 +3040,13 @@ function doLogout(){
   showScreen('loginScreen');
 }
 function pickNick(el){document.getElementById('iNick').value=el.textContent;}
-function saveNick(){
+async function saveNick(){
   const nick=document.getElementById('iNick').value.trim();
   const err=document.getElementById('nickErr');
   if(!nick||nick.length<2){err.style.display='block';return;}
   err.style.display='none';
-  saveNickData(CU.name,nick);
+  showToast('저장 중...','');
+  await saveNickData(CU.name,nick);
   showScreen('dashScreen');renderDash();
 }
 function renderDash(){
@@ -3076,29 +3134,53 @@ function updateSliderBg(el,val,max){
   const p=max>0?val/max*100:0;
   el.style.background=`linear-gradient(90deg,#2f54eb ${p}%,#e4e8f4 ${p}%)`;
 }
-function submitEval(){
+async function submitEval(){
   const score=parseFloat(document.getElementById('slider').value);
   const comment=document.getElementById('evalComment').value.trim();
   if(isNaN(score)||score<0||score>CT.maxScore){
     showToast(`0~${CT.maxScore}점 사이로 입력해주세요.`,'err');return;
   }
-  saveEvalData(CU.name,CT.evaluatee,score,comment);
+  const btn=document.querySelector('.btn-submit');
+  btn.textContent='전송 중...';btn.disabled=true;
+  await saveEvalData(CU.name,CT.evaluatee,score,comment,CT.dept,CT.rel,CT.maxScore);
+  btn.textContent='평가 제출';btn.disabled=false;
   document.getElementById('completeName').textContent=CT.evaluatee;
   showScreen('completeScreen');
 }
 function goBack(){showScreen('dashScreen');renderDash();}
-function goAdmin(){renderAdmin();showScreen('adminScreen');}
+async function goAdmin(){showScreen('adminScreen');await renderAdmin();}
 
-function renderAdmin(){
-  const evals=getEvals(),nicks=getNicks();
-  const totalEv=EMPLOYEES.filter(e=>e.tasks&&e.tasks.length>0).length;
-  const submitted=Object.keys(evals).length;
-  const totalSub=Object.values(evals).reduce((s,v)=>s+Object.keys(v).length,0);
-  const now=new Date();
-  document.getElementById('adminSub').textContent=
-    `${now.getFullYear()}년 ${now.getMonth()+1}월 | 평가자 ${submitted}/${totalEv}명 참여 | 총 ${totalSub}건 제출`;
+async function renderAdmin(){
+  // 로딩 표시
+  document.getElementById('adminSub').textContent='데이터 불러오는 중...';
+  document.getElementById('statGrid').innerHTML='<div style="color:var(--text2);padding:16px;">⏳ 구글 시트에서 불러오는 중...</div>';
+  document.getElementById('adminContent').innerHTML='';
+
+  // 구글 시트에서 데이터 fetch
+  const rawRows = await fetchAdminData();
+  const nicks = getNicks();
+
+  // rawRows: [{제출시각, 평가자, 피평가자, 부서, 관계, 점수, 최대점, 코멘트}, ...]
+  // 피평가자별 집계
   const eeSet=new Set();
   EMPLOYEES.forEach(e=>(e.tasks||[]).forEach(t=>eeSet.add(t.evaluatee)));
+
+  // 제출된 평가 맵 {평가자+피평가자: row}
+  const evalMap={};
+  const commentRows=[];
+  rawRows.forEach(r=>{
+    const key=r['평가자']+'__'+r['피평가자'];
+    evalMap[key]=r;
+    if(r['코멘트']) commentRows.push(r);
+  });
+
+  const totalEv=EMPLOYEES.filter(e=>e.tasks&&e.tasks.length>0).length;
+  const submittedEvSet=new Set(rawRows.map(r=>r['평가자']));
+  const totalSub=rawRows.length;
+  const now=new Date();
+  document.getElementById('adminSub').textContent=
+    `${now.getFullYear()}년 ${now.getMonth()+1}월 | 평가자 ${submittedEvSet.size}/${totalEv}명 참여 | 총 ${totalSub}건 제출`;
+
   const scores=[];
   eeSet.forEach(eeName=>{
     let total=0,maxTotal=0,count=0,evalCount=0;
@@ -3106,23 +3188,31 @@ function renderAdmin(){
       const task=(emp.tasks||[]).find(t=>t.evaluatee===eeName);
       if(!task)return;
       evalCount++;
-      const got=evals?.[emp.name]?.[eeName];
-      if(got){total+=got.score;count++;}
+      const key=emp.name+'__'+eeName;
+      if(evalMap[key]){
+        total+=parseFloat(evalMap[key]['점수'])||0;
+        count++;
+      }
       maxTotal+=task.maxScore;
     });
     const te=EMPLOYEES.find(e=>e.name===eeName);
+    // 닉네임: 시트 데이터에서 우선, 없으면 로컬
     scores.push({name:eeName,nick:nicks[eeName]||'',dept:te?.dept||'',role:te?.role||'',
       total:Math.round(total*10)/10,maxTotal:Math.round(maxTotal*10)/10,
       count,evalCount,pct:maxTotal>0?Math.round(total/maxTotal*1000)/10:0});
   });
   scores.sort((a,b)=>b.total-a.total);
   const completedEval=scores.filter(s=>s.count>=s.evalCount).length;
+
   document.getElementById('statGrid').innerHTML=`
     <div class="stat-card"><div class="stat-val">${scores.length}</div><div class="stat-lbl">피평가자 수</div></div>
-    <div class="stat-card"><div class="stat-val">${submitted}</div><div class="stat-lbl">평가 참여자</div></div>
+    <div class="stat-card"><div class="stat-val">${submittedEvSet.size}</div><div class="stat-lbl">평가 참여자</div></div>
     <div class="stat-card"><div class="stat-val">${totalSub}</div><div class="stat-lbl">총 제출 건수</div></div>
     <div class="stat-card"><div class="stat-val">${completedEval}</div><div class="stat-lbl">완료 인원</div></div>`;
-  window._adminScores=scores;window._adminEvals=evals;
+
+  window._adminScores=scores;
+  window._adminEvals=evalMap;
+  window._commentRows=commentRows;
   switchTab(curAdminTab,document.querySelector('.a-tab.active'));
 }
 function switchTab(tab,el){
@@ -3150,26 +3240,20 @@ function renderRankTab(){
     </tr>`).join('')}</tbody></table>`;
 }
 function renderCommentTab(){
-  const evals=window._adminEvals||{};
-  const rows=[];
-  Object.entries(evals).forEach(([ev,targets])=>{
-    Object.entries(targets).forEach(([ee,data])=>{
-      if(data.comment)rows.push({evaluator:ev,evaluatee:ee,score:data.score,comment:data.comment,ts:data.ts});
-    });
-  });
-  rows.sort((a,b)=>b.ts-a.ts);
+  const rows=window._commentRows||[];
   if(!rows.length){
     document.getElementById('adminContent').innerHTML=
       `<div class="empty"><div class="ico">💬</div><div>작성된 코멘트가 없습니다.</div></div>`;return;
   }
   document.getElementById('adminContent').innerHTML=`
     <table class="comment-table"><thead><tr>
-      <th>평가자</th><th>피평가자</th><th>점수</th><th>코멘트</th>
+      <th>제출시각</th><th>평가자</th><th>피평가자</th><th>점수</th><th>코멘트</th>
     </tr></thead><tbody>${rows.map(r=>`<tr>
-      <td><strong>${r.evaluator}</strong></td>
-      <td>${r.evaluatee}</td>
-      <td style="color:var(--accent);font-weight:700">${r.score}</td>
-      <td>${r.comment}</td>
+      <td style="color:var(--text3);font-size:11px;">${r['제출시각']||''}</td>
+      <td><strong>${r['평가자']}</strong></td>
+      <td>${r['피평가자']}</td>
+      <td style="color:var(--accent);font-weight:700">${r['점수']}</td>
+      <td>${r['코멘트']}</td>
     </tr>`).join('')}</tbody></table>`;
 }
 function exportRankCSV(){
@@ -3181,13 +3265,11 @@ function exportRankCSV(){
   dlCSV(csv,'Ephraim_성과평가_순위.csv');
 }
 function exportCommentCSV(){
-  const evals=window._adminEvals||{};
-  let csv='평가자,피평가자,점수,코멘트,제출시각\n';
-  Object.entries(evals).forEach(([ev,targets])=>{
-    Object.entries(targets).forEach(([ee,data])=>{
-      const t=data.ts?new Date(data.ts).toLocaleString('ko-KR'):'';
-      csv+=`"${ev}","${ee}","${data.score}","${(data.comment||'').replace(/"/g,"'")}","${t}"\n`;
-    });
+  const rows=window._commentRows||[];
+  let csv='제출시각,평가자,피평가자,점수,코멘트\n';
+  rows.forEach(r=>{
+    csv+=`"${r['제출시각']||''}","${r['평가자']}","${r['피평가자']}","${r['점수']}","${(r['코멘트']||'').replace(/"/g,"'")}"
+`;
   });
   dlCSV(csv,'Ephraim_성과평가_코멘트.csv');
 }
