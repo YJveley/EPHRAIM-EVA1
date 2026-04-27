@@ -1,0 +1,3206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ephraim 성과평가</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f0f2f8;
+  --bg2:       #e4e8f4;
+  --surface:   #ffffff;
+  --surface2:  #f7f8fc;
+  --border:    #dde2f0;
+  --border2:   #c8cfea;
+  --accent:    #2f54eb;
+  --accent2:   #597ef7;
+  --accent-lt: #e8edff;
+  --accent-glow: rgba(47,84,235,0.14);
+  --navy:      #0f1f6e;
+  --gold:      #d48806;
+  --gold-lt:   #fffbe6;
+  --green:     #389e0d;
+  --green-lt:  #f6ffed;
+  --red:       #cf1322;
+  --text:      #0d1436;
+  --text2:     #4a5380;
+  --text3:     #8c93b8;
+  --radius:    16px;
+  --radius-sm: 10px;
+  --shadow:    0 2px 10px rgba(47,84,235,0.07);
+  --shadow-md: 0 6px 24px rgba(47,84,235,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font-family:"Noto Sans KR",sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* ── LOGIN / NICK ── */
+#loginScreen,#nickScreen{display:none;min-height:100vh;
+  align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#e8edff 0%,#f0f2f8 45%,#eef0fa 100%);}
+#loginScreen.active,#nickScreen.active{display:flex;}
+.center-wrap{width:100%;max-width:400px;padding:28px 24px;}
+
+.brand-lockup{display:flex;align-items:center;gap:10px;margin-bottom:36px;}
+.brand-mark{width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(47,84,235,0.3);}
+.brand-mark svg{width:18px;height:18px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-name{font-family:"DM Sans",sans-serif;font-size:20px;font-weight:700;
+  color:var(--navy);letter-spacing:-.01em;}
+
+.page-title{font-size:30px;font-weight:900;line-height:1.2;margin-bottom:8px;color:var(--text);}
+.page-title em{font-style:normal;color:var(--accent);}
+.page-sub{color:var(--text2);font-size:14px;margin-bottom:32px;line-height:1.7;}
+
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--text2);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
+.field input{width:100%;padding:13px 16px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text);font-size:15px;font-family:inherit;outline:none;
+  transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow);}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.field input::placeholder{color:var(--text3);}
+
+.btn-primary{width:100%;padding:15px;margin-top:4px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:var(--radius-sm);color:#fff;
+  font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 4px 16px rgba(47,84,235,0.32);
+  transition:opacity .2s,transform .1s,box-shadow .2s;}
+.btn-primary:hover{opacity:.9;box-shadow:0 6px 20px rgba(47,84,235,0.4);}
+.btn-primary:active{transform:scale(.98);}
+
+.err-box{margin-top:12px;padding:11px 15px;
+  background:#fff1f0;border:1px solid #ffa39e;
+  border-radius:var(--radius-sm);color:var(--red);font-size:13px;display:none;}
+.err-box.show{display:block;}
+
+.nick-icon{font-size:42px;margin-bottom:16px;}
+.nick-examples{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.nick-ex{background:var(--surface);border:1.5px solid var(--border);border-radius:100px;
+  padding:5px 14px;font-size:12px;color:var(--text2);cursor:pointer;
+  transition:all .18s;box-shadow:var(--shadow);}
+.nick-ex:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);}
+.nick-hint{font-size:12px;color:var(--text3);margin-top:7px;}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;height:58px;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 22px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 1px 8px rgba(47,84,235,0.06);}
+.tb-left{display:flex;align-items:center;gap:14px;}
+.tb-brand{display:flex;align-items:center;gap:8px;}
+.tb-mark{width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(47,84,235,0.25);}
+.tb-mark svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.tb-logo{font-family:"DM Sans",sans-serif;font-size:17px;font-weight:700;
+  color:var(--navy);letter-spacing:-.01em;}
+.tb-divider{width:1px;height:18px;background:var(--border);}
+.tb-user{font-size:13px;color:var(--text2);}
+.tb-user strong{color:var(--text);font-weight:600;}
+.tb-nick{font-size:11px;font-weight:700;color:var(--accent);
+  background:var(--accent-lt);border:1px solid rgba(47,84,235,.18);
+  border-radius:100px;padding:3px 10px;margin-left:6px;}
+.tb-right{display:flex;gap:8px;}
+.btn-sm{padding:7px 13px;border-radius:7px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:inherit;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text2);
+  transition:all .18s;box-shadow:var(--shadow);}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent);}
+.btn-sm.pri{background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(47,84,235,.28);}
+.btn-sm.pri:hover{opacity:.88;}
+
+/* ── DASHBOARD ── */
+.page-body{max-width:680px;margin:0 auto;padding:28px 20px 80px;}
+
+.prog-card{background:linear-gradient(135deg,var(--navy) 0%,var(--accent) 100%);
+  border-radius:var(--radius);padding:22px 24px;margin-bottom:22px;
+  box-shadow:0 6px 24px rgba(47,84,235,0.28);position:relative;overflow:hidden;}
+.prog-card::before{content:"";position:absolute;right:-30px;top:-30px;
+  width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);}
+.prog-card::after{content:"";position:absolute;right:50px;bottom:-40px;
+  width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.04);}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:relative;}
+.prog-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.65);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.prog-count{font-size:26px;font-weight:900;color:#fff;}
+.prog-count span{font-size:14px;font-weight:400;opacity:.65;}
+.prog-pct{font-size:36px;font-weight:900;color:#fff;position:relative;}
+.prog-track{background:rgba(255,255,255,.2);border-radius:100px;height:7px;overflow:hidden;position:relative;}
+.prog-fill{height:100%;border-radius:100px;
+  background:rgba(255,255,255,.9);
+  transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+.done-banner{background:var(--green-lt);border:1.5px solid #b7eb8f;
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  box-shadow:var(--shadow);}
+.done-banner-text{font-size:14px;color:var(--green);font-weight:700;}
+.done-banner-sub{font-size:12px;color:var(--text2);margin-top:3px;}
+
+.sec-title{font-size:11px;font-weight:700;color:var(--text2);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border);}
+
+.task-card{background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:16px 18px;margin-bottom:9px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .18s;box-shadow:var(--shadow);}
+.task-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.task-card.done{border-color:#b7eb8f;background:var(--green-lt);}
+.task-card.done:hover{transform:none;box-shadow:var(--shadow);}
+.task-left{display:flex;align-items:center;gap:13px;}
+.task-av{width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#fff;
+  box-shadow:0 2px 8px rgba(47,84,235,.22);}
+.task-av.done{background:linear-gradient(135deg,#52c41a,#73d13d);
+  box-shadow:0 2px 8px rgba(82,196,26,.22);}
+.task-name{font-size:15px;font-weight:700;margin-bottom:2px;color:var(--text);}
+.task-meta{font-size:12px;color:var(--text2);}
+.task-right{display:flex;align-items:center;gap:9px;}
+.score-chip{font-size:11px;font-weight:700;
+  background:var(--accent-lt);border:1px solid rgba(47,84,235,.18);
+  border-radius:6px;padding:4px 10px;color:var(--accent);}
+.done-chip{font-size:11px;font-weight:700;color:var(--green);
+  background:var(--green-lt);border:1px solid #b7eb8f;
+  border-radius:6px;padding:4px 10px;}
+.arr{color:var(--text3);font-size:18px;}
+.empty{text-align:center;padding:48px 24px;color:var(--text2);}
+.empty .ico{font-size:40px;margin-bottom:12px;}
+
+/* ── EVAL ── */
+.eval-hdr{padding:16px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+  background:var(--surface);box-shadow:var(--shadow);}
+.back-btn{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text2);cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;flex-shrink:0;}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);}
+.eval-hdr-info{flex:1;}
+.eval-tgt-name{font-size:18px;font-weight:800;margin-bottom:2px;color:var(--text);}
+.eval-tgt-meta{font-size:12px;color:var(--text2);}
+
+/* score card */
+.score-card{background:linear-gradient(135deg,var(--navy),var(--accent));
+  border-radius:var(--radius);padding:28px 24px;margin-bottom:20px;text-align:center;
+  box-shadow:0 6px 24px rgba(47,84,235,0.28);position:relative;overflow:hidden;}
+.score-card::before{content:"";position:absolute;right:-40px;top:-40px;
+  width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05);}
+.score-num{font-size:72px;font-weight:900;line-height:1;color:#fff;
+  font-family:"DM Sans",sans-serif;position:relative;}
+.score-max-lbl{font-size:13px;color:rgba(255,255,255,.65);margin-top:6px;}
+.score-rel-chip{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;
+  color:#fff;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:100px;padding:4px 14px;letter-spacing:.04em;}
+
+/* slider */
+.slider-wrap{margin-bottom:20px;background:var(--surface);
+  border-radius:var(--radius);padding:18px 20px;
+  border:1.5px solid var(--border);box-shadow:var(--shadow);}
+.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.slider-lbl{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.04em;}
+.slider-cur{font-size:22px;font-weight:900;color:var(--accent);
+  font-family:"DM Sans",sans-serif;}
+input[type=range]{width:100%;-webkit-appearance:none;height:7px;border-radius:100px;
+  outline:none;cursor:pointer;background:var(--bg2);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;
+  border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:3px solid #fff;box-shadow:0 2px 8px rgba(47,84,235,.35);cursor:pointer;
+  transition:transform .15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+.slider-minmax{display:flex;justify-content:space-between;font-size:11px;
+  color:var(--text3);margin-top:5px;}
+
+/* criteria */
+.crit-block{margin-bottom:18px;}
+.crit-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  padding:10px 14px;border-radius:var(--radius-sm);
+  background:var(--surface2);border:1.5px solid var(--border);}
+.crit-hdr-icon{font-size:15px;}
+.crit-hdr-title{font-size:13px;font-weight:700;color:var(--text);}
+.crit-tag{font-size:10px;font-weight:700;letter-spacing:.08em;
+  padding:3px 10px;border-radius:100px;margin-left:auto;}
+.tag-att{background:#e6f4ff;color:#0958d9;border:1px solid #91caff;}
+.tag-per{background:var(--gold-lt);color:var(--gold);border:1px solid #ffd666;}
+.crit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:520px){.crit-grid{grid-template-columns:1fr;}}
+.crit-item{background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 14px;
+  display:flex;gap:10px;align-items:flex-start;
+  box-shadow:var(--shadow);transition:border-color .18s,box-shadow .18s;}
+.crit-item:hover{border-color:var(--accent);box-shadow:var(--shadow-md);}
+.crit-n{width:22px;height:22px;border-radius:50%;
+  background:var(--accent-lt);color:var(--accent);
+  font-size:10px;font-weight:700;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.crit-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.crit-desc{font-size:11px;color:var(--text2);line-height:1.55;}
+
+/* comment */
+.comment-wrap{margin-bottom:28px;background:var(--surface);
+  border-radius:var(--radius);padding:18px 20px;
+  border:1.5px solid var(--border);box-shadow:var(--shadow);}
+.comment-wrap label{display:block;font-size:11px;font-weight:700;color:var(--text2);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+.comment-wrap textarea{width:100%;padding:12px 14px;height:88px;resize:none;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-size:13px;
+  font-family:inherit;outline:none;transition:border-color .2s;line-height:1.6;}
+.comment-wrap textarea:focus{border-color:var(--accent);}
+.comment-wrap textarea::placeholder{color:var(--text3);}
+.comment-notice{font-size:11px;color:var(--text3);margin-top:8px;}
+
+/* submit bar */
+.submit-bar{position:fixed;bottom:0;left:0;right:0;padding:14px 20px;
+  background:rgba(240,242,248,.97);backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);display:flex;gap:10px;
+  max-width:680px;margin:0 auto;box-shadow:0 -2px 12px rgba(47,84,235,.07);}
+.btn-submit{flex:1;padding:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:var(--radius-sm);color:#fff;
+  font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 4px 14px rgba(47,84,235,.32);
+  transition:opacity .18s,transform .1s;}
+.btn-submit:hover{opacity:.88;}
+.btn-submit:active{transform:scale(.98);}
+.btn-cancel{padding:14px 18px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text2);font-size:13px;font-weight:600;font-family:inherit;
+  cursor:pointer;box-shadow:var(--shadow);}
+.btn-cancel:hover{border-color:var(--accent);color:var(--accent);}
+
+/* complete */
+#completeScreen.active{display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#e8edff,#f0f2f8);}
+.complete-wrap{text-align:center;max-width:360px;padding:24px;}
+.complete-ico{font-size:68px;margin-bottom:18px;
+  animation:pop .4s cubic-bezier(.68,-.55,.27,1.55);}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.complete-title{font-size:22px;font-weight:900;margin-bottom:8px;color:var(--text);}
+.complete-sub{color:var(--text2);line-height:1.7;margin-bottom:26px;}
+.complete-name{color:var(--accent);font-weight:700;}
+
+/* ADMIN */
+#adminScreen.active{display:block;}
+.admin-body{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+.admin-hero{padding:20px 0 18px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+.admin-hero-title{font-size:20px;font-weight:900;margin-bottom:4px;color:var(--text);}
+.admin-hero-sub{font-size:13px;color:var(--text2);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:16px 18px;box-shadow:var(--shadow);}
+.stat-val{font-size:30px;font-weight:900;color:var(--accent);
+  font-family:"DM Sans",sans-serif;}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:4px;}
+
+.admin-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.a-tab{padding:8px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text2);font-family:inherit;transition:all .18s;box-shadow:var(--shadow);}
+.a-tab:hover{border-color:var(--accent);color:var(--accent);}
+.a-tab.active{border-color:var(--accent);color:var(--accent);
+  background:var(--accent-lt);}
+
+.export-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+
+.rank-table{width:100%;border-collapse:collapse;background:var(--surface);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.rank-table th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;
+  color:var(--text2);letter-spacing:.08em;text-transform:uppercase;
+  background:var(--surface2);border-bottom:1.5px solid var(--border);}
+.rank-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;}
+.rank-table tr:last-child td{border-bottom:none;}
+.rank-table tr:hover td{background:var(--surface2);}
+.rank-score-cell{font-size:16px;font-weight:900;color:var(--accent);
+  font-family:"DM Sans",sans-serif;}
+.nick-badge{display:inline-block;background:var(--accent-lt);
+  border:1px solid rgba(47,84,235,.18);border-radius:100px;
+  padding:2px 10px;font-size:11px;color:var(--accent);font-weight:700;}
+.medal{font-size:16px;}
+
+.comment-table{width:100%;border-collapse:collapse;background:var(--surface);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.comment-table th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;
+  color:var(--text2);letter-spacing:.08em;text-transform:uppercase;
+  background:var(--surface2);border-bottom:1.5px solid var(--border);}
+.comment-table td{padding:11px 14px;border-bottom:1px solid var(--border);
+  font-size:12px;vertical-align:top;line-height:1.6;}
+.comment-table tr:last-child td{border-bottom:none;}
+.comment-table tr:hover td{background:var(--surface2);}
+
+/* toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  padding:11px 20px;font-size:13px;font-weight:600;color:var(--text);
+  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:9999;
+  box-shadow:var(--shadow-md);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:#52c41a;color:var(--green);}
+.toast.err{border-color:#ffa39e;color:var(--red);}
+
+@media(max-width:500px){
+  .page-body,.admin-body{padding-left:14px;padding-right:14px;}
+  .score-num{font-size:56px;}
+  .submit-bar{max-width:100%;}
+  .crit-grid{grid-template-columns:1fr;}
+  .tb-divider,.tb-user{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen" class="screen">
+  <div class="center-wrap">
+    <div class="brand-lockup">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="brand-name">Ephraim</div>
+    </div>
+    <h1 class="page-title">월간<br><em>성과평가</em></h1>
+    <p class="page-sub">이름과 생년월일을 입력하여<br>나의 평가 대상자를 확인하세요.</p>
+    <div class="field"><label>이름</label>
+      <input type="text" id="iName" placeholder="홍길동" autocomplete="off"
+             onkeydown="if(event.key==='Enter')document.getElementById('iBirth').focus()"></div>
+    <div class="field"><label>생년월일 6자리</label>
+      <input type="text" id="iBirth" placeholder="예) 901225" maxlength="6" autocomplete="off"
+             onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn-primary" onclick="doLogin()">로그인 →</button>
+    <div class="err-box" id="loginErr">이름 또는 생년월일이 올바르지 않습니다.</div>
+  </div>
+</div>
+
+<!-- ══ NICKNAME ══ -->
+<div id="nickScreen" class="screen">
+  <div class="center-wrap">
+    <div class="brand-lockup">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="brand-name">Ephraim</div>
+    </div>
+    <div class="nick-icon">🏷️</div>
+    <h2 class="page-title" style="font-size:26px;">닉네임 설정</h2>
+    <p class="page-sub">순위 공개 시 실명 대신 사용됩니다.<br>본인만 자신의 순위와 점수를 확인할 수 있어요.</p>
+    <div class="field"><label>나의 닉네임</label>
+      <input type="text" id="iNick" placeholder="예) 봄바람, 달빛여우" maxlength="12"
+             autocomplete="off" onkeydown="if(event.key==='Enter')saveNick()"></div>
+    <div class="nick-hint">2~10자 권장</div>
+    <div class="nick-examples">
+      <span class="nick-ex" onclick="pickNick(this)">봄바람</span>
+      <span class="nick-ex" onclick="pickNick(this)">달빛여우</span>
+      <span class="nick-ex" onclick="pickNick(this)">초코구름</span>
+      <span class="nick-ex" onclick="pickNick(this)">파란하늘</span>
+      <span class="nick-ex" onclick="pickNick(this)">빛나는별</span>
+      <span class="nick-ex" onclick="pickNick(this)">조용한숲</span>
+    </div>
+    <button class="btn-primary" style="margin-top:28px;" onclick="saveNick()">완료 →</button>
+    <div class="err-box" id="nickErr">닉네임을 2자 이상 입력해주세요.</div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashScreen" class="screen">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-brand">
+        <div class="tb-mark">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="tb-logo">Ephraim</div>
+      </div>
+      <div class="tb-divider"></div>
+      <div class="tb-user" id="tbUser"></div>
+    </div>
+    <div class="tb-right" id="tbRight">
+      <button class="btn-sm" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="prog-card">
+      <div class="prog-top">
+        <div>
+          <div class="prog-label">평가 진행현황</div>
+          <div class="prog-count" id="progCount">0 <span>/ 0명</span></div>
+        </div>
+        <div class="prog-pct" id="progPct">0%</div>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+    <div id="doneBanner"></div>
+    <div class="sec-title">평가 대상자 목록</div>
+    <div id="taskList"></div>
+  </div>
+</div>
+
+<!-- ══ EVAL ══ -->
+<div id="evalScreen" class="screen">
+  <div class="eval-hdr">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="eval-hdr-info">
+      <div class="eval-tgt-name" id="evalName"></div>
+      <div class="eval-tgt-meta" id="evalMeta"></div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="score-card">
+      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-max-lbl" id="scoreMaxLbl">최대 0점</div>
+      <div class="score-rel-chip" id="scoreRel"></div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-top">
+        <span class="slider-lbl">점수 조절 <span style="color:var(--text3);font-size:11px;">(0.5 단위)</span></span>
+        <span class="slider-cur" id="sliderCur">0</span>
+      </div>
+      <input type="range" id="slider" min="0" max="100" step="0.5" value="0" oninput="onSlider(this.value)">
+      <div class="slider-minmax"><span>0</span><span id="sliderMid"></span><span id="sliderMax">100</span></div>
+    </div>
+    <div class="crit-block">
+      <div class="crit-hdr">
+        <span class="crit-hdr-icon">💡</span>
+        <span class="crit-hdr-title">태도 평가 기준</span>
+        <span class="crit-tag tag-att">ATTITUDE</span>
+      </div>
+      <div class="crit-grid" id="attGrid"></div>
+    </div>
+    <div class="crit-block">
+      <div class="crit-hdr">
+        <span class="crit-hdr-icon">🎯</span>
+        <span class="crit-hdr-title">성과 평가 기준</span>
+        <span class="crit-tag tag-per">PERFORMANCE</span>
+      </div>
+      <div class="crit-grid" id="perGrid"></div>
+    </div>
+    <div class="comment-wrap">
+      <label>코멘트 (선택)</label>
+      <textarea id="evalComment" placeholder="평가에 대한 설명이나 피드백을 남겨주세요."></textarea>
+      <div class="comment-notice">💬 코멘트는 관리자(인사문화부)에 전달됩니다.</div>
+    </div>
+  </div>
+  <div class="submit-bar">
+    <button class="btn-cancel" onclick="goBack()">취소</button>
+    <button class="btn-submit" onclick="submitEval()">평가 제출</button>
+  </div>
+</div>
+
+<!-- ══ COMPLETE ══ -->
+<div id="completeScreen" class="screen">
+  <div class="complete-wrap">
+    <div class="complete-ico">✅</div>
+    <div class="complete-title">평가 완료!</div>
+    <div class="complete-sub"><span class="complete-name" id="completeName"></span>님에 대한<br>평가가 저장되었습니다.</div>
+    <button class="btn-sm pri" onclick="goBack()">목록으로 돌아가기</button>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="adminScreen" class="screen">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-brand">
+        <div class="tb-mark">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="tb-logo">Ephraim</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:var(--accent);
+        background:var(--accent-lt);border:1px solid rgba(47,84,235,.18);
+        border-radius:100px;padding:3px 10px;">🔐 관리자</span>
+    </div>
+    <div class="tb-right">
+      <button class="btn-sm pri" onclick="showScreen('dashScreen');renderDash()">← 평가로 돌아가기</button>
+      <button class="btn-sm" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-hero">
+      <div class="admin-hero-title">📊 성과평가 관리자 현황</div>
+      <div class="admin-hero-sub" id="adminSub"></div>
+    </div>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="admin-tabs">
+      <button class="a-tab active" onclick="switchTab('rank',this)">🏆 점수 순위</button>
+      <button class="a-tab" onclick="switchTab('comments',this)">💬 코멘트 전체</button>
+    </div>
+    <div class="export-bar">
+      <button class="btn-sm" onclick="exportRankCSV()">📥 순위 CSV</button>
+      <button class="btn-sm" onclick="exportCommentCSV()">📥 코멘트 CSV</button>
+    </div>
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const EMPLOYEES = [
+  {
+    "name": "정혜원",
+    "dept": "카페게이트",
+    "role": "본부장",
+    "birth": "821211",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 10,
+        "rel": "본부장→직원(디자인겸직)",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      },
+      {
+        "evaluatee": "박형선",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "강지원",
+    "dept": "카페게이트",
+    "role": "부본부장",
+    "birth": "950207",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "김명현",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "951016",
+    "tasks": [
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "배단비",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "950714",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "양우준",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "931019",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "오경석",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "890906",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "이경기",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "930411",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "이준태",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "921118",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "이현진",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "960828",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "장인호",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "870818",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "조정완",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "941020",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "한수빈",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "970911",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장탐이",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "장탐이",
+    "dept": "카페게이트",
+    "role": "직원",
+    "birth": "880403",
+    "tasks": [
+      {
+        "evaluatee": "김명현",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "배단비",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "양우준",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "오경석",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이경기",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이준태",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "이현진",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "장인호",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "조정완",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      },
+      {
+        "evaluatee": "한수빈",
+        "maxScore": 3.0,
+        "rel": "동료→동료",
+        "dept": "카페게이트"
+      }
+    ]
+  },
+  {
+    "name": "김재희",
+    "dept": "패션유통",
+    "role": "실장",
+    "birth": "830821",
+    "tasks": [
+      {
+        "evaluatee": "신유정",
+        "maxScore": 80.0,
+        "rel": "실장→직원",
+        "dept": "패션유통"
+      },
+      {
+        "evaluatee": "서은경",
+        "maxScore": 80.0,
+        "rel": "실장→직원",
+        "dept": "패션유통"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "신유정",
+    "dept": "패션유통",
+    "role": "팀장",
+    "birth": "900626",
+    "tasks": [
+      {
+        "evaluatee": "서은경",
+        "maxScore": 20.0,
+        "rel": "동료→동료",
+        "dept": "패션유통"
+      }
+    ]
+  },
+  {
+    "name": "서은경",
+    "dept": "패션유통",
+    "role": "직원",
+    "birth": "960823",
+    "tasks": [
+      {
+        "evaluatee": "신유정",
+        "maxScore": 20.0,
+        "rel": "동료→동료",
+        "dept": "패션유통"
+      }
+    ]
+  },
+  {
+    "name": "고영찬",
+    "dept": "재무",
+    "role": "이사",
+    "birth": "700315",
+    "tasks": [
+      {
+        "evaluatee": "박종훈",
+        "maxScore": 50.0,
+        "rel": "이사→소장",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "이완일",
+        "maxScore": 50.0,
+        "rel": "이사→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "김성민",
+        "maxScore": 50.0,
+        "rel": "이사→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "정해진",
+        "maxScore": 50.0,
+        "rel": "이사→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "최재형",
+        "maxScore": 50.0,
+        "rel": "이사→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "윤도경",
+        "maxScore": 100,
+        "rel": "이사→직원(단독)",
+        "dept": "영화"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 50.2,
+        "rel": "이사→직원",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "임민혜",
+    "dept": "재무",
+    "role": "실장",
+    "birth": "831108",
+    "tasks": [
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 30,
+        "rel": "실장→직원",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "곽예은",
+    "dept": "재무",
+    "role": "직원",
+    "birth": "980128",
+    "tasks": []
+  },
+  {
+    "name": "윤도경",
+    "dept": "영화",
+    "role": "점장",
+    "birth": "840731",
+    "tasks": []
+  },
+  {
+    "name": "정의준",
+    "dept": "자산관리",
+    "role": "본부장",
+    "birth": "720907",
+    "tasks": [
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "이경원",
+    "dept": "자산관리",
+    "role": "파트장",
+    "birth": "811125",
+    "tasks": [
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "신윤정",
+    "dept": "슬로우캘리",
+    "role": "본부장",
+    "birth": "830307",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 50.3,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 50.2,
+        "rel": "본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 50.0,
+        "rel": "본부장→직원",
+        "dept": "인사문화"
+      },
+      {
+        "evaluatee": "박형선",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 30,
+        "rel": "본부장→직원(교차)",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "이송이",
+    "dept": "슬로우캘리",
+    "role": "부본부장",
+    "birth": "920815",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 20,
+        "rel": "부본부장→직원",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "김정훈",
+    "dept": "슬로우캘리",
+    "role": "팀장",
+    "birth": "920923",
+    "tasks": [
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "장지호",
+    "dept": "슬로우캘리",
+    "role": "팀장",
+    "birth": "971225",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "성지원",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "960128",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "손정헌",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "900122",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "유희원",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "990120",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "이진규",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "931224",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "정주리",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "990104",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "한승준",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "010614",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "함수민",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "990606",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이수민",
+        "maxScore": 2.2,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "이수민",
+    "dept": "슬로우캘리",
+    "role": "직원",
+    "birth": "951017",
+    "tasks": [
+      {
+        "evaluatee": "김정훈",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "장지호",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "성지원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "손정헌",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "유희원",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "이진규",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "정주리",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "한승준",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      },
+      {
+        "evaluatee": "함수민",
+        "maxScore": 3.3,
+        "rel": "동료→동료",
+        "dept": "슬로우캘리"
+      }
+    ]
+  },
+  {
+    "name": "김은주",
+    "dept": "인사문화",
+    "role": "팀장",
+    "birth": "860531",
+    "tasks": []
+  },
+  {
+    "name": "황인규",
+    "dept": "성장",
+    "role": "파트장",
+    "birth": "750109",
+    "tasks": [
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      },
+      {
+        "evaluatee": "박형선",
+        "maxScore": 30.0,
+        "rel": "파트장→직원",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 30.0,
+        "rel": "파트장→직원",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 30.0,
+        "rel": "파트장→직원",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 30.0,
+        "rel": "파트장→직원",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 30.0,
+        "rel": "파트장→직원",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "박형선",
+    "dept": "성장",
+    "role": "팀장",
+    "birth": "810804",
+    "tasks": [
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "홍주형",
+    "dept": "성장",
+    "role": "팀장",
+    "birth": "901004",
+    "tasks": [
+      {
+        "evaluatee": "박형선",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "권애린",
+    "dept": "성장",
+    "role": "직원",
+    "birth": "910806",
+    "tasks": [
+      {
+        "evaluatee": "박형선",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "송익훈",
+    "dept": "성장",
+    "role": "직원",
+    "birth": "910925",
+    "tasks": [
+      {
+        "evaluatee": "박형선",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "이주경",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "이주경",
+    "dept": "성장",
+    "role": "직원",
+    "birth": "940704",
+    "tasks": [
+      {
+        "evaluatee": "박형선",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "홍주형",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "권애린",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      },
+      {
+        "evaluatee": "송익훈",
+        "maxScore": 2.5,
+        "rel": "동료→동료",
+        "dept": "성장"
+      }
+    ]
+  },
+  {
+    "name": "홍정호",
+    "dept": "법무",
+    "role": "실장",
+    "birth": "710319",
+    "tasks": [
+      {
+        "evaluatee": "곽예은",
+        "maxScore": 2.2,
+        "rel": "리더→직원(교차)",
+        "dept": "재무"
+      },
+      {
+        "evaluatee": "김은주",
+        "maxScore": 5.0,
+        "rel": "리더→직원(교차)",
+        "dept": "인사문화"
+      }
+    ]
+  },
+  {
+    "name": "박종훈",
+    "dept": "MRO",
+    "role": "소장",
+    "birth": "921229",
+    "tasks": [
+      {
+        "evaluatee": "이완일",
+        "maxScore": 20,
+        "rel": "소장→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "김성민",
+        "maxScore": 20,
+        "rel": "소장→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "정해진",
+        "maxScore": 20,
+        "rel": "소장→직원",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "최재형",
+        "maxScore": 20,
+        "rel": "소장→직원",
+        "dept": "MRO"
+      }
+    ]
+  },
+  {
+    "name": "이완일",
+    "dept": "MRO",
+    "role": "팀장",
+    "birth": "740506",
+    "tasks": [
+      {
+        "evaluatee": "박종훈",
+        "maxScore": 12.5,
+        "rel": "직원→소장",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "김성민",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "정해진",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "최재형",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      }
+    ]
+  },
+  {
+    "name": "김성민",
+    "dept": "MRO",
+    "role": "팀장",
+    "birth": "900427",
+    "tasks": [
+      {
+        "evaluatee": "박종훈",
+        "maxScore": 12.5,
+        "rel": "직원→소장",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "이완일",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "정해진",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "최재형",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      }
+    ]
+  },
+  {
+    "name": "정해진",
+    "dept": "MRO",
+    "role": "직원",
+    "birth": "911127",
+    "tasks": [
+      {
+        "evaluatee": "박종훈",
+        "maxScore": 12.5,
+        "rel": "직원→소장",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "이완일",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "김성민",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "최재형",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      }
+    ]
+  },
+  {
+    "name": "최재형",
+    "dept": "MRO",
+    "role": "직원",
+    "birth": "951116",
+    "tasks": [
+      {
+        "evaluatee": "박종훈",
+        "maxScore": 12.5,
+        "rel": "직원→소장",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "이완일",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "김성민",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      },
+      {
+        "evaluatee": "정해진",
+        "maxScore": 10.0,
+        "rel": "동료→동료",
+        "dept": "MRO"
+      }
+    ]
+  }
+];
+const ADMIN_NAME="신윤정", ADMIN_BIRTH="830307";
+
+const CRITERIA_STAFF={
+  att:[
+    {t:"책임감과 성실성",d:"맡은 업무를 끝까지 책임지고 완수하며 성실히 임한다."},
+    {t:"협력과 팀워크",d:"동료와 원활히 협력하고 팀 목표를 위해 기여한다."},
+    {t:"커뮤니케이션",d:"필요한 정보를 적시에 공유하고 명확하게 소통한다."},
+    {t:"적극성과 주도성",d:"자발적으로 문제를 발굴하고 해결하려 한다."},
+    {t:"조직문화 기여",d:"조직 가치관에 맞게 행동하며 긍정적인 분위기를 만든다."},
+  ],
+  per:[
+    {t:"업무 품질",d:"담당 업무의 정확도, 완성도, 기준 충족도가 높다."},
+    {t:"업무 속도와 효율",d:"기한 내에 업무를 완료하고 시간을 효율적으로 활용한다."},
+    {t:"목표 달성도",d:"개인/팀 목표 대비 실제 달성 수준이 높다."},
+    {t:"문제 해결력",d:"업무 중 발생하는 문제를 실용적으로 해결한다."},
+    {t:"성장과 학습",d:"새로운 지식과 기술을 습득해 업무에 적용한다."},
+  ]
+};
+const CRITERIA_LEADER={
+  att:[
+    {t:"솔선수범과 책임감",d:"팀 앞에서 모범을 보이며 결과에 책임진다."},
+    {t:"공정성과 신뢰",d:"팀원을 공정하게 대우하고 일관된 기준을 유지한다."},
+    {t:"소통과 경청",d:"팀원의 의견을 적극 경청하고 방향을 명확히 제시한다."},
+    {t:"팀 동기부여",d:"팀원의 강점을 파악하고 성장을 지원하며 동기를 부여한다."},
+    {t:"조직문화 조성",d:"심리적 안전감 있는 팀 문화를 만들고 갈등을 건설적으로 해결한다."},
+  ],
+  per:[
+    {t:"목표 설정과 달성",d:"명확한 팀 목표를 수립하고 실질적 성과를 달성한다."},
+    {t:"업무 배분과 조율",d:"역량에 맞게 업무를 배분하고 효율적으로 조율한다."},
+    {t:"의사결정력",d:"필요한 시점에 적절한 판단을 내리고 실행력을 발휘한다."},
+    {t:"팀 성장 기여",d:"팀원의 역량 개발을 지원하고 팀 전체 수준을 높인다."},
+    {t:"전략적 사고",d:"단기 실행과 중장기 방향을 균형 있게 사고하고 대응한다."},
+  ]
+};
+const LEADER_ROLES=["본부장","부본부장","실장","이사","파트장","소장"];
+function isLeader(r){return LEADER_ROLES.includes(r);}
+
+const EV_KEY='ephraim_evals_v2',NICK_KEY='ephraim_nicks_v2';
+function getEvals(){try{return JSON.parse(localStorage.getItem(EV_KEY))||{};}catch{return{};}}
+function getNicks(){try{return JSON.parse(localStorage.getItem(NICK_KEY))||{};}catch{return{};}}
+function saveEvalData(ev,ee,score,comment){
+  const d=getEvals();if(!d[ev])d[ev]={};
+  d[ev][ee]={score,comment,ts:Date.now()};
+  localStorage.setItem(EV_KEY,JSON.stringify(d));
+}
+function saveNickData(name,nick){const n=getNicks();n[name]=nick;localStorage.setItem(NICK_KEY,JSON.stringify(n));}
+function getMyNick(n){return getNicks()[n]||'';}
+function hasEval(ev,ee){return !!(getEvals()?.[ev]?.[ee]);}
+
+let CU=null,CT=null,curAdminTab='rank';
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function doLogin(){
+  const name=document.getElementById('iName').value.trim();
+  const birth=document.getElementById('iBirth').value.trim();
+  const err=document.getElementById('loginErr');
+  const emp=EMPLOYEES.find(e=>e.name===name&&e.birth===birth);
+  if(!emp){err.style.display='block';document.getElementById('iBirth').focus();return;}
+  err.style.display='none';
+  CU=emp;
+  CU._isAdmin=(name===ADMIN_NAME&&birth===ADMIN_BIRTH);
+  if(!getMyNick(emp.name)){
+    showScreen('nickScreen');
+    document.getElementById('iNick').value='';
+    document.getElementById('nickErr').style.display='none';
+  }else{showScreen('dashScreen');renderDash();}
+}
+function doLogout(){
+  CU=null;
+  document.getElementById('iName').value='';
+  document.getElementById('iBirth').value='';
+  showScreen('loginScreen');
+}
+function pickNick(el){document.getElementById('iNick').value=el.textContent;}
+function saveNick(){
+  const nick=document.getElementById('iNick').value.trim();
+  const err=document.getElementById('nickErr');
+  if(!nick||nick.length<2){err.style.display='block';return;}
+  err.style.display='none';
+  saveNickData(CU.name,nick);
+  showScreen('dashScreen');renderDash();
+}
+function renderDash(){
+  if(!CU)return;
+  const nick=getMyNick(CU.name);
+  document.getElementById('tbUser').innerHTML=
+    `<strong>${CU.name}</strong> · ${CU.dept}<span class="tb-nick">${nick}</span>`;
+  document.getElementById('tbRight').innerHTML=CU._isAdmin
+    ?`<button class="btn-sm pri" onclick="goAdmin()">🔐 관리자</button>
+      <button class="btn-sm" onclick="doLogout()">로그아웃</button>`
+    :`<button class="btn-sm" onclick="doLogout()">로그아웃</button>`;
+
+  const tasks=CU.tasks||[];
+  const done=tasks.filter(t=>hasEval(CU.name,t.evaluatee)).length;
+  const total=tasks.length;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progCount').innerHTML=`${done} <span>/ ${total}명</span>`;
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progFill').style.width=pct+'%';
+
+  const banner=document.getElementById('doneBanner');
+  banner.innerHTML=(total>0&&done===total)?`
+    <div class="done-banner">
+      <div><div class="done-banner-text">🎉 모든 평가를 완료했습니다!</div>
+      <div class="done-banner-sub">수고하셨습니다. 결과는 관리자가 취합 후 공개됩니다.</div></div>
+    </div>`:'';
+
+  const list=document.getElementById('taskList');
+  if(!tasks.length){
+    list.innerHTML=`<div class="empty"><div class="ico">📭</div><div>이번 달 평가 배정이 없습니다.</div></div>`;return;
+  }
+  list.innerHTML=tasks.map(t=>{
+    const isDone=hasEval(CU.name,t.evaluatee);
+    return `<div class="task-card ${isDone?'done':''}" onclick="openEval('${t.evaluatee}')">
+      <div class="task-left">
+        <div class="task-av ${isDone?'done':''}">${isDone?'✓':t.evaluatee[0]}</div>
+        <div><div class="task-name">${t.evaluatee}</div>
+        <div class="task-meta">${t.dept} · ${t.rel}</div></div>
+      </div>
+      <div class="task-right">
+        <div class="score-chip">최대 ${t.maxScore}점</div>
+        ${isDone?'<div class="done-chip">완료 ✓</div>':'<div class="arr">›</div>'}
+      </div></div>`;
+  }).join('');
+}
+function openEval(eeName){
+  CT=CU.tasks.find(t=>t.evaluatee===eeName);if(!CT)return;
+  const te=EMPLOYEES.find(e=>e.name===eeName);
+  document.getElementById('evalName').textContent=eeName;
+  document.getElementById('evalMeta').textContent=(te?`${te.dept} · ${te.role}`:'')+' · '+CT.rel;
+  const max=CT.maxScore;
+  const prev=getEvals()?.[CU.name]?.[eeName];
+  const init=prev?prev.score:0;
+  document.getElementById('scoreNum').textContent=init;
+  document.getElementById('scoreMaxLbl').textContent=`최대 ${max}점`;
+  document.getElementById('scoreRel').textContent=CT.rel;
+  document.getElementById('sliderCur').textContent=init;
+  document.getElementById('sliderMax').textContent=max;
+  // 중간값: 0.5 단위에 맞게
+  document.getElementById('sliderMid').textContent=Math.floor(max/2*2)/2;
+  const sl=document.getElementById('slider');
+  sl.max=max;sl.step=0.5;sl.value=init;
+  updateSliderBg(sl,init,max);
+  document.getElementById('evalComment').value=prev?(prev.comment||''):'';
+  const crit=(te&&isLeader(te.role))?CRITERIA_LEADER:CRITERIA_STAFF;
+  renderGrid('attGrid',crit.att);
+  renderGrid('perGrid',crit.per);
+  showScreen('evalScreen');
+}
+function renderGrid(id,items){
+  document.getElementById(id).innerHTML=items.map((c,i)=>`
+    <div class="crit-item">
+      <div class="crit-n">${i+1}</div>
+      <div><div class="crit-title">${c.t}</div>
+      <div class="crit-desc">${c.d}</div></div></div>`).join('');
+}
+function onSlider(val){
+  const max=CT.maxScore,v=Math.min(parseFloat(val),max);
+  document.getElementById('slider').value=v;
+  document.getElementById('scoreNum').textContent=v;
+  document.getElementById('sliderCur').textContent=v;
+  updateSliderBg(document.getElementById('slider'),v,max);
+}
+function updateSliderBg(el,val,max){
+  const p=max>0?val/max*100:0;
+  el.style.background=`linear-gradient(90deg,#2f54eb ${p}%,#e4e8f4 ${p}%)`;
+}
+function submitEval(){
+  const score=parseFloat(document.getElementById('slider').value);
+  const comment=document.getElementById('evalComment').value.trim();
+  if(isNaN(score)||score<0||score>CT.maxScore){
+    showToast(`0~${CT.maxScore}점 사이로 입력해주세요.`,'err');return;
+  }
+  saveEvalData(CU.name,CT.evaluatee,score,comment);
+  document.getElementById('completeName').textContent=CT.evaluatee;
+  showScreen('completeScreen');
+}
+function goBack(){showScreen('dashScreen');renderDash();}
+function goAdmin(){renderAdmin();showScreen('adminScreen');}
+
+function renderAdmin(){
+  const evals=getEvals(),nicks=getNicks();
+  const totalEv=EMPLOYEES.filter(e=>e.tasks&&e.tasks.length>0).length;
+  const submitted=Object.keys(evals).length;
+  const totalSub=Object.values(evals).reduce((s,v)=>s+Object.keys(v).length,0);
+  const now=new Date();
+  document.getElementById('adminSub').textContent=
+    `${now.getFullYear()}년 ${now.getMonth()+1}월 | 평가자 ${submitted}/${totalEv}명 참여 | 총 ${totalSub}건 제출`;
+  const eeSet=new Set();
+  EMPLOYEES.forEach(e=>(e.tasks||[]).forEach(t=>eeSet.add(t.evaluatee)));
+  const scores=[];
+  eeSet.forEach(eeName=>{
+    let total=0,maxTotal=0,count=0,evalCount=0;
+    EMPLOYEES.forEach(emp=>{
+      const task=(emp.tasks||[]).find(t=>t.evaluatee===eeName);
+      if(!task)return;
+      evalCount++;
+      const got=evals?.[emp.name]?.[eeName];
+      if(got){total+=got.score;count++;}
+      maxTotal+=task.maxScore;
+    });
+    const te=EMPLOYEES.find(e=>e.name===eeName);
+    scores.push({name:eeName,nick:nicks[eeName]||'',dept:te?.dept||'',role:te?.role||'',
+      total:Math.round(total*10)/10,maxTotal:Math.round(maxTotal*10)/10,
+      count,evalCount,pct:maxTotal>0?Math.round(total/maxTotal*1000)/10:0});
+  });
+  scores.sort((a,b)=>b.total-a.total);
+  const completedEval=scores.filter(s=>s.count>=s.evalCount).length;
+  document.getElementById('statGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-val">${scores.length}</div><div class="stat-lbl">피평가자 수</div></div>
+    <div class="stat-card"><div class="stat-val">${submitted}</div><div class="stat-lbl">평가 참여자</div></div>
+    <div class="stat-card"><div class="stat-val">${totalSub}</div><div class="stat-lbl">총 제출 건수</div></div>
+    <div class="stat-card"><div class="stat-val">${completedEval}</div><div class="stat-lbl">완료 인원</div></div>`;
+  window._adminScores=scores;window._adminEvals=evals;
+  switchTab(curAdminTab,document.querySelector('.a-tab.active'));
+}
+function switchTab(tab,el){
+  curAdminTab=tab;
+  document.querySelectorAll('.a-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  tab==='rank'?renderRankTab():renderCommentTab();
+}
+function renderRankTab(){
+  const s=window._adminScores||[];
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('adminContent').innerHTML=`
+    <table class="rank-table"><thead><tr>
+      <th>순위</th><th>이름</th><th>닉네임</th><th>부서</th>
+      <th>점수</th><th>최대</th><th>달성률</th><th>평가수</th>
+    </tr></thead><tbody>${s.map((r,i)=>`<tr>
+      <td class="medal">${i<3?medals[i]:i+1}</td>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.nick?`<span class="nick-badge">${r.nick}</span>`:'<span style="color:var(--text3)">미설정</span>'}</td>
+      <td style="color:var(--text2)">${r.dept}</td>
+      <td class="rank-score-cell">${r.total}</td>
+      <td style="color:var(--text2)">${r.maxTotal}</td>
+      <td style="color:var(--text2)">${r.pct}%</td>
+      <td style="color:var(--text2)">${r.count}/${r.evalCount}</td>
+    </tr>`).join('')}</tbody></table>`;
+}
+function renderCommentTab(){
+  const evals=window._adminEvals||{};
+  const rows=[];
+  Object.entries(evals).forEach(([ev,targets])=>{
+    Object.entries(targets).forEach(([ee,data])=>{
+      if(data.comment)rows.push({evaluator:ev,evaluatee:ee,score:data.score,comment:data.comment,ts:data.ts});
+    });
+  });
+  rows.sort((a,b)=>b.ts-a.ts);
+  if(!rows.length){
+    document.getElementById('adminContent').innerHTML=
+      `<div class="empty"><div class="ico">💬</div><div>작성된 코멘트가 없습니다.</div></div>`;return;
+  }
+  document.getElementById('adminContent').innerHTML=`
+    <table class="comment-table"><thead><tr>
+      <th>평가자</th><th>피평가자</th><th>점수</th><th>코멘트</th>
+    </tr></thead><tbody>${rows.map(r=>`<tr>
+      <td><strong>${r.evaluator}</strong></td>
+      <td>${r.evaluatee}</td>
+      <td style="color:var(--accent);font-weight:700">${r.score}</td>
+      <td>${r.comment}</td>
+    </tr>`).join('')}</tbody></table>`;
+}
+function exportRankCSV(){
+  const s=window._adminScores||[];
+  let csv='순위,이름,닉네임,부서,직책,총점,최대점,달성률,평가수\n';
+  s.forEach((r,i)=>{
+    csv+=`${i+1},"${r.name}","${r.nick}","${r.dept}","${r.role}","${r.total}","${r.maxTotal}","${r.pct}%","${r.count}/${r.evalCount}"\n`;
+  });
+  dlCSV(csv,'Ephraim_성과평가_순위.csv');
+}
+function exportCommentCSV(){
+  const evals=window._adminEvals||{};
+  let csv='평가자,피평가자,점수,코멘트,제출시각\n';
+  Object.entries(evals).forEach(([ev,targets])=>{
+    Object.entries(targets).forEach(([ee,data])=>{
+      const t=data.ts?new Date(data.ts).toLocaleString('ko-KR'):'';
+      csv+=`"${ev}","${ee}","${data.score}","${(data.comment||'').replace(/"/g,"'")}","${t}"\n`;
+    });
+  });
+  dlCSV(csv,'Ephraim_성과평가_코멘트.csv');
+}
+function dlCSV(csv,fname){
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();
+}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.className='toast',2400);
+}
+showScreen('loginScreen');
+</script>
+</body>
+</html>
