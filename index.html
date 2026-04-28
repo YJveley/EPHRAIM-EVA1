@@ -374,12 +374,12 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
       <div class="brand-name">Ephraim</div>
     </div>
     <h1 class="page-title">월간<br><em>성과평가</em></h1>
-    <p class="page-sub">이름과 생년월일을 입력하여<br>나의 평가 대상자를 확인하세요.</p>
+    <p class="page-sub">이름과 비밀번호를 입력하여<br>나의 평가 대상자를 확인하세요.</p>
     <div class="field"><label>이름</label>
       <input type="text" id="iName" placeholder="홍길동" autocomplete="off"
              onkeydown="if(event.key==='Enter')document.getElementById('iBirth').focus()"></div>
-    <div class="field"><label>생년월일 6자리</label>
-      <input type="text" id="iBirth" placeholder="예) 901225" maxlength="6" autocomplete="off"
+    <div class="field"><label>비밀번호</label>
+      <input type="text" id="iBirth" placeholder="비밀번호 6자리" maxlength="6" autocomplete="off"
              onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn-primary" onclick="doLogin()">로그인 →</button>
     <div class="err-box" id="loginErr">이름 또는 생년월일이 올바르지 않습니다.</div>
@@ -555,7 +555,7 @@ const EMPLOYEES = [
     "name": "정혜원",
     "dept": "카페게이트",
     "role": "본부장",
-    "birth": "821211",
+    "pw": "122333",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -654,12 +654,6 @@ const EMPLOYEES = [
         "dept": "성장"
       },
       {
-        "evaluatee": "권애린",
-        "maxScore": 30,
-        "rel": "본부장→직원(교차)",
-        "dept": "성장"
-      },
-      {
         "evaluatee": "송익훈",
         "maxScore": 30,
         "rel": "본부장→직원(교차)",
@@ -677,7 +671,7 @@ const EMPLOYEES = [
     "name": "강지원",
     "dept": "카페게이트",
     "role": "부본부장",
-    "birth": "950207",
+    "pw": "952771",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -763,7 +757,7 @@ const EMPLOYEES = [
     "name": "김명현",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "951016",
+    "pw": "951016",
     "tasks": [
       {
         "evaluatee": "배단비",
@@ -831,7 +825,7 @@ const EMPLOYEES = [
     "name": "배단비",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "950714",
+    "pw": "987654",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -899,7 +893,7 @@ const EMPLOYEES = [
     "name": "양우준",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "931019",
+    "pw": "541312",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -967,7 +961,7 @@ const EMPLOYEES = [
     "name": "오경석",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "890906",
+    "pw": "110300",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1035,7 +1029,7 @@ const EMPLOYEES = [
     "name": "이경기",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "930411",
+    "pw": "251129",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1103,7 +1097,7 @@ const EMPLOYEES = [
     "name": "이준태",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "921118",
+    "pw": "476247",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1171,7 +1165,7 @@ const EMPLOYEES = [
     "name": "이현진",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "960828",
+    "pw": "660731",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1239,7 +1233,7 @@ const EMPLOYEES = [
     "name": "장인호",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "870818",
+    "pw": "737410",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1307,7 +1301,7 @@ const EMPLOYEES = [
     "name": "조정완",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "941020",
+    "pw": "040710",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1375,7 +1369,7 @@ const EMPLOYEES = [
     "name": "한수빈",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "970911",
+    "pw": "950225",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1443,7 +1437,7 @@ const EMPLOYEES = [
     "name": "장탐이",
     "dept": "카페게이트",
     "role": "직원",
-    "birth": "880403",
+    "pw": "040333",
     "tasks": [
       {
         "evaluatee": "김명현",
@@ -1511,7 +1505,7 @@ const EMPLOYEES = [
     "name": "김재희",
     "dept": "패션유통",
     "role": "실장",
-    "birth": "830821",
+    "pw": "131129",
     "tasks": [
       {
         "evaluatee": "신유정",
@@ -1543,7 +1537,7 @@ const EMPLOYEES = [
     "name": "신유정",
     "dept": "패션유통",
     "role": "팀장",
-    "birth": "900626",
+    "pw": "284111",
     "tasks": [
       {
         "evaluatee": "서은경",
@@ -1557,7 +1551,7 @@ const EMPLOYEES = [
     "name": "서은경",
     "dept": "패션유통",
     "role": "직원",
-    "birth": "960823",
+    "pw": "567212",
     "tasks": [
       {
         "evaluatee": "신유정",
@@ -1571,7 +1565,7 @@ const EMPLOYEES = [
     "name": "고영찬",
     "dept": "재무",
     "role": "이사",
-    "birth": "700315",
+    "pw": "898801",
     "tasks": [
       {
         "evaluatee": "박종훈",
@@ -1627,7 +1621,7 @@ const EMPLOYEES = [
     "name": "임민혜",
     "dept": "재무",
     "role": "실장",
-    "birth": "831108",
+    "pw": "070108",
     "tasks": [
       {
         "evaluatee": "곽예은",
@@ -1647,21 +1641,21 @@ const EMPLOYEES = [
     "name": "곽예은",
     "dept": "재무",
     "role": "직원",
-    "birth": "980128",
+    "pw": "231029",
     "tasks": []
   },
   {
     "name": "윤도경",
     "dept": "영화",
     "role": "점장",
-    "birth": "840731",
+    "pw": "840731",
     "tasks": []
   },
   {
     "name": "정의준",
     "dept": "자산관리",
     "role": "본부장",
-    "birth": "720907",
+    "pw": "901100",
     "tasks": [
       {
         "evaluatee": "곽예은",
@@ -1681,7 +1675,7 @@ const EMPLOYEES = [
     "name": "이경원",
     "dept": "자산관리",
     "role": "파트장",
-    "birth": "811125",
+    "pw": "811125",
     "tasks": [
       {
         "evaluatee": "곽예은",
@@ -1701,7 +1695,7 @@ const EMPLOYEES = [
     "name": "신윤정",
     "dept": "슬로우캘리",
     "role": "본부장",
-    "birth": "830307",
+    "pw": "171212",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -1788,12 +1782,6 @@ const EMPLOYEES = [
         "dept": "성장"
       },
       {
-        "evaluatee": "권애린",
-        "maxScore": 30,
-        "rel": "본부장→직원(교차)",
-        "dept": "성장"
-      },
-      {
         "evaluatee": "송익훈",
         "maxScore": 30,
         "rel": "본부장→직원(교차)",
@@ -1811,7 +1799,7 @@ const EMPLOYEES = [
     "name": "이송이",
     "dept": "슬로우캘리",
     "role": "부본부장",
-    "birth": "920815",
+    "pw": "164587",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -1891,7 +1879,7 @@ const EMPLOYEES = [
     "name": "김정훈",
     "dept": "슬로우캘리",
     "role": "팀장",
-    "birth": "920923",
+    "pw": "328276",
     "tasks": [
       {
         "evaluatee": "장지호",
@@ -1953,7 +1941,7 @@ const EMPLOYEES = [
     "name": "장지호",
     "dept": "슬로우캘리",
     "role": "팀장",
-    "birth": "971225",
+    "pw": "030602",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2015,7 +2003,7 @@ const EMPLOYEES = [
     "name": "성지원",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "960128",
+    "pw": "082265",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2077,7 +2065,7 @@ const EMPLOYEES = [
     "name": "손정헌",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "900122",
+    "pw": "991100",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2139,7 +2127,7 @@ const EMPLOYEES = [
     "name": "유희원",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "990120",
+    "pw": "990120",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2201,7 +2189,7 @@ const EMPLOYEES = [
     "name": "이진규",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "931224",
+    "pw": "931224",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2263,7 +2251,7 @@ const EMPLOYEES = [
     "name": "정주리",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "990104",
+    "pw": "357816",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2325,7 +2313,7 @@ const EMPLOYEES = [
     "name": "한승준",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "010614",
+    "pw": "940519",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2387,7 +2375,7 @@ const EMPLOYEES = [
     "name": "함수민",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "990606",
+    "pw": "426644",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2449,7 +2437,7 @@ const EMPLOYEES = [
     "name": "이수민",
     "dept": "슬로우캘리",
     "role": "직원",
-    "birth": "951017",
+    "pw": "024904",
     "tasks": [
       {
         "evaluatee": "김정훈",
@@ -2511,14 +2499,14 @@ const EMPLOYEES = [
     "name": "김은주",
     "dept": "인사문화",
     "role": "팀장",
-    "birth": "860531",
+    "pw": "112233",
     "tasks": []
   },
   {
     "name": "황인규",
     "dept": "성장",
     "role": "파트장",
-    "birth": "750109",
+    "pw": "131313",
     "tasks": [
       {
         "evaluatee": "곽예은",
@@ -2534,31 +2522,25 @@ const EMPLOYEES = [
       },
       {
         "evaluatee": "박형선",
-        "maxScore": 30.0,
+        "maxScore": 30.1,
         "rel": "파트장→직원",
         "dept": "성장"
       },
       {
         "evaluatee": "홍주형",
-        "maxScore": 30.0,
-        "rel": "파트장→직원",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "권애린",
-        "maxScore": 30.0,
+        "maxScore": 30.1,
         "rel": "파트장→직원",
         "dept": "성장"
       },
       {
         "evaluatee": "송익훈",
-        "maxScore": 30.0,
+        "maxScore": 30.1,
         "rel": "파트장→직원",
         "dept": "성장"
       },
       {
         "evaluatee": "이주경",
-        "maxScore": 30.0,
+        "maxScore": 30.1,
         "rel": "파트장→직원",
         "dept": "성장"
       }
@@ -2568,29 +2550,23 @@ const EMPLOYEES = [
     "name": "박형선",
     "dept": "성장",
     "role": "팀장",
-    "birth": "810804",
+    "pw": "240701",
     "tasks": [
       {
         "evaluatee": "홍주형",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "권애린",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "송익훈",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "이주경",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       }
@@ -2600,61 +2576,23 @@ const EMPLOYEES = [
     "name": "홍주형",
     "dept": "성장",
     "role": "팀장",
-    "birth": "901004",
+    "pw": "180100",
     "tasks": [
       {
         "evaluatee": "박형선",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "권애린",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "송익훈",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "이주경",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      }
-    ]
-  },
-  {
-    "name": "권애린",
-    "dept": "성장",
-    "role": "직원",
-    "birth": "910806",
-    "tasks": [
-      {
-        "evaluatee": "박형선",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "홍주형",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "송익훈",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "이주경",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       }
@@ -2664,29 +2602,23 @@ const EMPLOYEES = [
     "name": "송익훈",
     "dept": "성장",
     "role": "직원",
-    "birth": "910925",
+    "pw": "240527",
     "tasks": [
       {
         "evaluatee": "박형선",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "홍주형",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "권애린",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "이주경",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       }
@@ -2696,29 +2628,23 @@ const EMPLOYEES = [
     "name": "이주경",
     "dept": "성장",
     "role": "직원",
-    "birth": "940704",
+    "pw": "874200",
     "tasks": [
       {
         "evaluatee": "박형선",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "홍주형",
-        "maxScore": 2.5,
-        "rel": "동료→동료",
-        "dept": "성장"
-      },
-      {
-        "evaluatee": "권애린",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       },
       {
         "evaluatee": "송익훈",
-        "maxScore": 2.5,
+        "maxScore": 3.3,
         "rel": "동료→동료",
         "dept": "성장"
       }
@@ -2728,7 +2654,7 @@ const EMPLOYEES = [
     "name": "홍정호",
     "dept": "법무",
     "role": "실장",
-    "birth": "710319",
+    "pw": "116911",
     "tasks": [
       {
         "evaluatee": "곽예은",
@@ -2748,7 +2674,7 @@ const EMPLOYEES = [
     "name": "박종훈",
     "dept": "MRO",
     "role": "소장",
-    "birth": "921229",
+    "pw": "123456",
     "tasks": [
       {
         "evaluatee": "이완일",
@@ -2780,7 +2706,7 @@ const EMPLOYEES = [
     "name": "이완일",
     "dept": "MRO",
     "role": "팀장",
-    "birth": "740506",
+    "pw": "120312",
     "tasks": [
       {
         "evaluatee": "박종훈",
@@ -2812,7 +2738,7 @@ const EMPLOYEES = [
     "name": "김성민",
     "dept": "MRO",
     "role": "팀장",
-    "birth": "900427",
+    "pw": "900427",
     "tasks": [
       {
         "evaluatee": "박종훈",
@@ -2844,7 +2770,7 @@ const EMPLOYEES = [
     "name": "정해진",
     "dept": "MRO",
     "role": "직원",
-    "birth": "911127",
+    "pw": "911127",
     "tasks": [
       {
         "evaluatee": "박종훈",
@@ -2876,7 +2802,7 @@ const EMPLOYEES = [
     "name": "최재형",
     "dept": "MRO",
     "role": "직원",
-    "birth": "951116",
+    "pw": "951116",
     "tasks": [
       {
         "evaluatee": "박종훈",
@@ -2905,7 +2831,7 @@ const EMPLOYEES = [
     ]
   }
 ];
-const ADMIN_NAME="신윤정", ADMIN_BIRTH="830307";
+const ADMIN_NAME="신윤정", ADMIN_BIRTH="171212";
 
 const CRITERIA_STAFF={
   att:[
@@ -3022,11 +2948,11 @@ function doLogin(){
   const name=document.getElementById('iName').value.trim();
   const birth=document.getElementById('iBirth').value.trim();
   const err=document.getElementById('loginErr');
-  const emp=EMPLOYEES.find(e=>e.name===name&&e.birth===birth);
+  const emp=EMPLOYEES.find(e=>e.name===name&&e.pw===birth);
   if(!emp){err.style.display='block';document.getElementById('iBirth').focus();return;}
   err.style.display='none';
   CU=emp;
-  CU._isAdmin=(name===ADMIN_NAME&&birth===ADMIN_BIRTH);
+  CU._isAdmin=(name===ADMIN_NAME&&emp.pw===ADMIN_BIRTH);
   if(!getMyNick(emp.name)){
     showScreen('nickScreen');
     document.getElementById('iNick').value='';
