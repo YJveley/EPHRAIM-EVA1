@@ -164,28 +164,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"Noto S
 .crit-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
 .crit-num-need{background:var(--accent-lt);color:var(--accent);}
-.crit-num-perf{background:var(--orange-lt);color:var(--orange);}
+.crit-num-perf{background:var(--surface2);color:var(--text2);}
 .crit-text{font-size:13px;color:var(--text2);line-height:1.6;flex:1;}
 
-/* slider section */
-.slider-section{border-radius:var(--radius-sm);padding:16px 18px;border:1.5px solid var(--border);}
-.slider-section-need{background:linear-gradient(135deg,#f0f5ff,#e8edff);}
-.slider-section-perf{background:linear-gradient(135deg,#fffaf0,var(--orange-lt));}
-.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.slider-lbl{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.04em;}
+/* ── 평가기준 섹션 라벨 ── */
+.section-label{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.section-label-tag{font-size:13px;font-weight:800;color:var(--text);letter-spacing:.03em;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:7px;padding:6px 14px;}
+
+/* ── 핵심 평가기준 (연회색/화이트 톤, 맨 위 배치) ── */
+.crit-list-main{margin-bottom:30px;display:flex;flex-direction:column;gap:10px;}
+.crit-row-main{display:flex;align-items:center;gap:14px;padding:16px 18px;border-bottom:none;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);}
+.crit-num-main{width:30px;height:30px;border-radius:8px;flex-shrink:0;margin-top:0;
+  background:var(--text2);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;}
+.crit-text-main{font-size:15px;font-weight:700;color:var(--text);line-height:1.6;flex:1;}
+.crit-row-warn .crit-text-main{font-size:13.5px;font-weight:600;color:var(--text2);}
+.crit-row-warn .crit-text-main strong{color:var(--text);font-weight:800;}
+
+/* score input section (구 slider) */
+.slider-section{border-radius:var(--radius-sm);padding:18px;border:1.5px solid var(--border);
+  background:var(--surface2);margin-top:0;}
+.slider-top{display:flex;justify-content:center;align-items:center;margin-bottom:12px;}
+.slider-lbl{font-size:15px;font-weight:800;color:var(--text);letter-spacing:.02em;}
 .slider-val-wrap{text-align:right;}
 .slider-val-need{font-size:26px;font-weight:900;color:var(--accent);font-family:"DM Sans",sans-serif;line-height:1;}
-.slider-val-perf{font-size:26px;font-weight:900;color:var(--orange);font-family:"DM Sans",sans-serif;line-height:1;}
+.slider-val-perf{font-size:26px;font-weight:900;color:var(--text);font-family:"DM Sans",sans-serif;line-height:1;}
 .slider-val-max{font-size:11px;color:var(--text3);margin-top:3px;}
-input[type=range]{width:100%;-webkit-appearance:none;height:7px;border-radius:100px;outline:none;cursor:pointer;}
-#sl1{background:var(--bg2);}
-#sl2{background:var(--bg2);}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;
-  border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:pointer;transition:transform .15s;}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
-#sl1::-webkit-slider-thumb{background:linear-gradient(135deg,var(--accent),var(--accent2));}
-#sl2::-webkit-slider-thumb{background:linear-gradient(135deg,#fa8c16,#ffc53d);}
-.slider-minmax{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:6px;}
+
+.score-input-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+.score-input-box{width:96px;height:64px;text-align:center;font-family:"DM Sans",sans-serif;
+  font-size:28px;font-weight:900;border-radius:var(--radius-sm);outline:none;
+  border:2px solid var(--border2);background:var(--surface);transition:border-color .2s,box-shadow .2s;
+  color:var(--text);-moz-appearance:textfield;}
+.score-input-box::-webkit-outer-spin-button,.score-input-box::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.score-input-box:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.score-input-divider{font-size:24px;font-weight:700;color:var(--text3);}
+.score-input-max{font-size:20px;font-weight:700;color:var(--text2);}
+.score-input-hint{text-align:center;font-size:11px;color:var(--text3);margin-top:9px;}
 
 /* comment */
 .comment-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
@@ -198,6 +217,21 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .comment-wrap textarea:focus{border-color:var(--accent);}
 .comment-wrap textarea::placeholder{color:var(--text3);}
 .comment-notice{font-size:11px;color:var(--text3);margin-top:8px;}
+
+/* ── 성과 정의 (점수입력과 같은 배경, 중앙정렬, 점수입력에 밀착) ── */
+.perf-note{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:none;
+  padding:14px 18px;margin-top:14px;margin-bottom:0;}
+.perf-note-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+.perf-note-row+.perf-note-row{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);}
+.perf-note-ico{font-size:16px;flex-shrink:0;line-height:1.6;}
+.perf-note-text{font-size:13px;font-weight:600;color:var(--text2);line-height:1.75;text-align:center;}
+.perf-note-text strong{font-weight:800;color:var(--text);}
+.perf-note-text em{font-style:normal;color:var(--text);font-weight:900;}
+.perf-note-ico{font-size:16px;flex-shrink:0;line-height:1.6;}
+.perf-note-text{font-size:13px;font-weight:600;color:var(--text2);line-height:1.75;}
+.perf-note-text strong{font-weight:800;color:var(--text);}
+.perf-note-text em{font-style:normal;color:var(--text);font-weight:900;}
 
 /* submit bar */
 .submit-bar{position:fixed;bottom:0;left:0;right:0;padding:14px 20px;
@@ -374,77 +408,45 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
   </div>
   <div class="eval-body">
 
-    <!-- 파트 1: 필요 -->
+    <!-- 평가 -->
     <div class="part-card">
-      <div class="part-card-hdr">
-        <span class="part-badge badge-need">파트 1</span>
-        <span class="part-title">평가 파트 — 필요</span>
-      </div>
-      <div class="crit-list">
-        <div class="crit-row">
-          <div class="crit-num crit-num-need">1</div>
-          <div class="crit-text">회사를 위해서 꼭 있어야 할, 필요한 사람인가?</div>
-        </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-need">2</div>
-          <div class="crit-text">사업부를 위해서 꼭 있어야 할, 필요한 사람인가?</div>
-        </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-need">3</div>
-          <div class="crit-text">동료들을 위해서 꼭 있어야 할, 필요한 사람인가?</div>
-        </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-need">4</div>
-          <div class="crit-text">고객(매장주 포함)들을 위해서 꼭 있어야 할, 필요한 사람인가?</div>
-        </div>
-      </div>
-      <div class="slider-section slider-section-need">
-        <div class="slider-top">
-          <div class="slider-lbl">파트 1 점수 (0.1 단위)</div>
-          <div class="slider-val-wrap">
-            <div class="slider-val-need" id="v1">0.0</div>
-            <div class="slider-val-max">최대 <span id="max1Lbl">0</span>점</div>
-          </div>
-        </div>
-        <input type="range" id="sl1" min="0" step="0.1" value="0" oninput="onSlider1(this.value)">
-        <div class="slider-minmax"><span>0</span><span id="sl1MaxLbl">0</span></div>
-      </div>
-    </div>
 
-    <!-- 파트 2: 성과 -->
-    <div class="part-card">
-      <div class="part-card-hdr">
-        <span class="part-badge badge-perf">파트 2</span>
-        <span class="part-title">평가 파트 — 성과</span>
+      <div class="section-label">
+        <span class="section-label-tag">평가기준</span>
       </div>
-      <div class="crit-list">
-        <div class="crit-row">
-          <div class="crit-num crit-num-perf">5</div>
-          <div class="crit-text">재무적인 성과를 내주는 사람인가? 즉, 실제로 회사에 돈을 벌어주는 직원인가?</div>
+
+      <div class="crit-list crit-list-main">
+        <div class="crit-row crit-row-main">
+          <div class="crit-num crit-num-main">1</div>
+          <div class="crit-text crit-text-main">회사의 순이익을 증가시키고 있는가?</div>
         </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-perf">6</div>
-          <div class="crit-text">사용하는 비용(급여 포함)보다 더 많은 수익을 내주는 직원인가?</div>
+        <div class="crit-row crit-row-main">
+          <div class="crit-num crit-num-main">2</div>
+          <div class="crit-text crit-text-main">회사의 손실을 줄이고 있는가?</div>
         </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-perf">7</div>
-          <div class="crit-text">사업부의 목표달성을 할 수 있도록, 동료들을 올바르게 자극해주는 직원인가?</div>
-        </div>
-        <div class="crit-row">
-          <div class="crit-num crit-num-perf">8</div>
-          <div class="crit-text">사업부를 먹여살린다고 인정할만한 직원인가?</div>
+        <div class="crit-row crit-row-main crit-row-warn">
+          <div class="crit-num crit-num-main crit-num-warn">3</div>
+          <div class="crit-text crit-text-main">이익을 내지 못하거나, <strong>손실을 끼쳤을 경우에는 0점</strong>을 부여한다</div>
         </div>
       </div>
+
+      <div class="perf-note">
+        <div class="perf-note-row">
+          <div class="perf-note-ico">💡</div>
+          <div class="perf-note-text">"성과"란 업무에 대한 <em>경험치가 아닌</em>, <em>수익을 내는 것</em>이다</div>
+        </div>
+      </div>
+
       <div class="slider-section slider-section-perf">
         <div class="slider-top">
-          <div class="slider-lbl">파트 2 점수 (0.1 단위)</div>
-          <div class="slider-val-wrap">
-            <div class="slider-val-perf" id="v2">0.0</div>
-            <div class="slider-val-max">최대 <span id="max2Lbl">0</span>점</div>
-          </div>
+          <div class="slider-lbl">점수 입력</div>
         </div>
-        <input type="range" id="sl2" min="0" step="0.1" value="0" oninput="onSlider2(this.value)">
-        <div class="slider-minmax"><span>0</span><span id="sl2MaxLbl">0</span></div>
+        <div class="score-input-row">
+          <input type="number" id="sl2" class="score-input-box" inputmode="decimal" min="0" step="0.1" value="0.0" oninput="onSlider2(this.value)" onblur="onSlider2(this.value)">
+          <span class="score-input-divider">/</span>
+          <span class="score-input-max" id="max2Lbl">0</span>
+        </div>
+        <div class="score-input-hint">0 ~ <span id="sl2MaxLbl">0</span>점 사이, 0.1점 단위로 입력</div>
       </div>
     </div>
 
@@ -508,7 +510,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 <div class="toast" id="toast"></div>
 
 <script>
-const EMPLOYEES=[{"name":"정혜원","dept":"카페게이트","pw":"122333","tasks":[{"evaluatee":"배단비","maxScore":50,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":50,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":50,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":50,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":50,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":50,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":50,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":50,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":50,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":50,"dept":"카페게이트"},{"evaluatee":"박형선","maxScore":20,"dept":"성장"},{"evaluatee":"홍주형","maxScore":20,"dept":"성장"},{"evaluatee":"이주경","maxScore":20,"dept":"성장"},{"evaluatee":"송익훈","maxScore":20,"dept":"성장"},{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"강지원","dept":"카페게이트","pw":"952771","tasks":[{"evaluatee":"배단비","maxScore":20,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":20,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":20,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":20,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":20,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":20,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":20,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":20,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":20,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":20,"dept":"카페게이트"},{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"배단비","dept":"카페게이트","pw":"987654","tasks":[{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"양우준","dept":"카페게이트","pw":"541312","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"오경석","dept":"카페게이트","pw":"110300","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"이경기","dept":"카페게이트","pw":"251129","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"이준태","dept":"카페게이트","pw":"476247","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"이현진","dept":"카페게이트","pw":"660731","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"장인호","dept":"카페게이트","pw":"737410","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"조정완","dept":"카페게이트","pw":"040710","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"한수빈","dept":"카페게이트","pw":"950225","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.33,"dept":"카페게이트"}]},{"name":"장탐이","dept":"카페게이트","pw":"040333","tasks":[{"evaluatee":"배단비","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이경기","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"장인호","maxScore":1.11,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.33,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.33,"dept":"카페게이트"}]},{"name":"김재희","dept":"패션유통","pw":"131129","tasks":[{"evaluatee":"신유정","maxScore":80,"dept":"패션유통"},{"evaluatee":"서은경","maxScore":80,"dept":"패션유통"},{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"신유정","dept":"패션유통","pw":"284111","tasks":[{"evaluatee":"서은경","maxScore":20,"dept":"패션유통"}]},{"name":"서은경","dept":"패션유통","pw":"567212","tasks":[{"evaluatee":"신유정","maxScore":20,"dept":"패션유통"}]},{"name":"고영찬","dept":"재무","pw":"898801","tasks":[{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":52,"dept":"재무"},{"evaluatee":"박종훈","maxScore":50,"dept":"MRO"},{"evaluatee":"이완일","maxScore":50,"dept":"MRO"},{"evaluatee":"김성민","maxScore":50,"dept":"MRO"},{"evaluatee":"정해진","maxScore":50,"dept":"MRO"},{"evaluatee":"최재형","maxScore":50,"dept":"MRO"}]},{"name":"임민혜","dept":"재무","pw":"070108","tasks":[{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":30,"dept":"재무"}]},{"name":"곽예은","dept":"재무","pw":"231029","tasks":[]},{"name":"정의준","dept":"자산관리","pw":"901100","tasks":[{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"이경원","dept":"자산관리","pw":"811125","tasks":[{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"신윤정","dept":"슬로우캘리","pw":"171212","tasks":[{"evaluatee":"김정훈","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":50,"dept":"슬로우캘리"},{"evaluatee":"박형선","maxScore":20,"dept":"성장"},{"evaluatee":"홍주형","maxScore":20,"dept":"성장"},{"evaluatee":"이주경","maxScore":20,"dept":"성장"},{"evaluatee":"송익훈","maxScore":20,"dept":"성장"},{"evaluatee":"김은주","maxScore":50,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"이송이","dept":"슬로우캘리","pw":"164587","tasks":[{"evaluatee":"김정훈","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":20,"dept":"슬로우캘리"},{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"김정훈","dept":"슬로우캘리","pw":"328276","tasks":[{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"장지호","dept":"슬로우캘리","pw":"030602","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"성지원","dept":"슬로우캘리","pw":"082265","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"유희원","dept":"슬로우캘리","pw":"990120","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"이진규","dept":"슬로우캘리","pw":"931224","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"정주리","dept":"슬로우캘리","pw":"357816","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"한승준","dept":"슬로우캘리","pw":"940519","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"함수민","dept":"슬로우캘리","pw":"426644","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"이수민","dept":"슬로우캘리","pw":"024904","tasks":[{"evaluatee":"김정훈","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"성지원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.75,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.75,"dept":"슬로우캘리"}]},{"name":"김은주","dept":"인사문화","pw":"112233","tasks":[]},{"name":"황인규","dept":"성장","pw":"131313","tasks":[{"evaluatee":"박형선","maxScore":30,"dept":"성장"},{"evaluatee":"홍주형","maxScore":30,"dept":"성장"},{"evaluatee":"이주경","maxScore":30,"dept":"성장"},{"evaluatee":"송익훈","maxScore":30,"dept":"성장"},{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"박형선","dept":"성장","pw":"240701","tasks":[{"evaluatee":"홍주형","maxScore":15,"dept":"성장"},{"evaluatee":"이주경","maxScore":15,"dept":"성장"},{"evaluatee":"송익훈","maxScore":3.33,"dept":"성장"}]},{"name":"홍주형","dept":"성장","pw":"180100","tasks":[{"evaluatee":"박형선","maxScore":15,"dept":"성장"},{"evaluatee":"이주경","maxScore":15,"dept":"성장"},{"evaluatee":"송익훈","maxScore":3.33,"dept":"성장"}]},{"name":"송익훈","dept":"성장","pw":"240527","tasks":[]},{"name":"이주경","dept":"성장","pw":"874200","tasks":[{"evaluatee":"박형선","maxScore":15,"dept":"성장"},{"evaluatee":"홍주형","maxScore":15,"dept":"성장"},{"evaluatee":"송익훈","maxScore":3.33,"dept":"성장"}]},{"name":"홍정호","dept":"법무","pw":"116911","tasks":[{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"곽예은","maxScore":2,"dept":"재무"}]},{"name":"박종훈","dept":"MRO","pw":"123456","tasks":[{"evaluatee":"이완일","maxScore":35,"dept":"MRO"},{"evaluatee":"김성민","maxScore":35,"dept":"MRO"},{"evaluatee":"정해진","maxScore":35,"dept":"MRO"},{"evaluatee":"최재형","maxScore":35,"dept":"MRO"}]},{"name":"이완일","dept":"MRO","pw":"120312","tasks":[{"evaluatee":"김은주","maxScore":5,"dept":"인사문화"},{"evaluatee":"박종훈","maxScore":35,"dept":"MRO"},{"evaluatee":"김성민","maxScore":5,"dept":"MRO"},{"evaluatee":"정해진","maxScore":5,"dept":"MRO"},{"evaluatee":"최재형","maxScore":5,"dept":"MRO"}]},{"name":"김성민","dept":"MRO","pw":"900427","tasks":[{"evaluatee":"박종훈","maxScore":5,"dept":"MRO"},{"evaluatee":"이완일","maxScore":5,"dept":"MRO"},{"evaluatee":"정해진","maxScore":5,"dept":"MRO"},{"evaluatee":"최재형","maxScore":5,"dept":"MRO"}]},{"name":"정해진","dept":"MRO","pw":"911127","tasks":[{"evaluatee":"박종훈","maxScore":5,"dept":"MRO"},{"evaluatee":"이완일","maxScore":5,"dept":"MRO"},{"evaluatee":"김성민","maxScore":5,"dept":"MRO"},{"evaluatee":"최재형","maxScore":5,"dept":"MRO"}]},{"name":"최재형","dept":"MRO","pw":"951116","tasks":[{"evaluatee":"박종훈","maxScore":5,"dept":"MRO"},{"evaluatee":"이완일","maxScore":5,"dept":"MRO"},{"evaluatee":"김성민","maxScore":5,"dept":"MRO"},{"evaluatee":"정해진","maxScore":5,"dept":"MRO"}]},{"name":"김혜선","dept":"구매기획","pw":"2562410","tasks":[{"evaluatee":"장인호","maxScore":20,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":20,"dept":"성장"}]}];
+const EMPLOYEES=[{"name":"강지원","dept":"카페게이트","pw":"952771","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"배단비","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":20.0,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":20.0,"dept":"카페게이트"}]},{"name":"고영찬","dept":"인사/재무/법무/자산","pw":"898801","tasks":[{"evaluatee":"곽예은","maxScore":50.3,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.4,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.4,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":50.3,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"곽예은","dept":"인사/재무/법무/자산","pw":"231029","tasks":[{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"김은주","dept":"인사/재무/법무/자산","pw":"112233","tasks":[{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"김재희","dept":"패션유통","pw":"131129","tasks":[{"evaluatee":"서은경","maxScore":60.0,"dept":"패션유통"},{"evaluatee":"신유정","maxScore":60.0,"dept":"패션유통"}]},{"name":"김혜선","dept":"구매기획","pw":"2562410","tasks":[]},{"name":"박형선","dept":"성장","pw":"240701","tasks":[{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"황인규","maxScore":13.3,"dept":"성장"}]},{"name":"배단비","dept":"카페게이트","pw":"987654","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"서은경","dept":"패션유통","pw":"567212","tasks":[{"evaluatee":"김재희","maxScore":50.0,"dept":"패션유통"},{"evaluatee":"서은경","maxScore":20.0,"dept":"패션유통"},{"evaluatee":"신유정","maxScore":20.0,"dept":"패션유통"}]},{"name":"성지원","dept":"슬로우캘리","pw":"082265","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"송익훈","dept":"카페게이트","pw":"240527","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"신유정","dept":"패션유통","pw":"284111","tasks":[{"evaluatee":"김재희","maxScore":50.0,"dept":"패션유통"},{"evaluatee":"서은경","maxScore":20.0,"dept":"패션유통"},{"evaluatee":"신유정","maxScore":20.0,"dept":"패션유통"}]},{"name":"신윤정","dept":"슬로우캘리","pw":"171212","tasks":[{"evaluatee":"김혜선","maxScore":10.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":10.0,"dept":"성장"},{"evaluatee":"이주경","maxScore":10.0,"dept":"성장"},{"evaluatee":"홍주형","maxScore":10.0,"dept":"성장"},{"evaluatee":"성지원","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":50.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":50.4,"dept":"슬로우캘리"},{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":50.0,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"황인규","maxScore":30.0,"dept":"성장"}]},{"name":"양우준","dept":"카페게이트","pw":"541312","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"오경석","dept":"카페게이트","pw":"110300","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"유희원","dept":"슬로우캘리","pw":"990120","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"이경기","dept":"카페게이트","pw":"251129","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"이경원","dept":"인사/재무/법무/자산","pw":"811125","tasks":[{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"이송이","dept":"슬로우캘리","pw":"164587","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":20.0,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":20.0,"dept":"슬로우캘리"}]},{"name":"이수민","dept":"슬로우캘리","pw":"024904","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"이주경","dept":"성장","pw":"874200","tasks":[{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"황인규","maxScore":13.3,"dept":"성장"}]},{"name":"이준태","dept":"카페게이트","pw":"476247","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"이진규","dept":"슬로우캘리","pw":"931224","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"이현진","dept":"카페게이트","pw":"660731","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"임민혜","dept":"인사/재무/법무/자산","pw":"070108","tasks":[{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"장지호","dept":"슬로우캘리","pw":"030602","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"장탐이","dept":"카페게이트","pw":"040333","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"정의준","dept":"인사/재무/법무/자산","pw":"901100","tasks":[{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":50.0,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"정주리","dept":"슬로우캘리","pw":"357816","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"정혜원","dept":"카페게이트","pw":"122333","tasks":[{"evaluatee":"김혜선","maxScore":10.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":10.0,"dept":"성장"},{"evaluatee":"이주경","maxScore":10.0,"dept":"성장"},{"evaluatee":"홍주형","maxScore":10.0,"dept":"성장"},{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"홍정호","maxScore":12.5,"dept":"인사/재무/법무/자산"},{"evaluatee":"강지원","maxScore":50.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":50.4,"dept":"카페게이트"},{"evaluatee":"황인규","maxScore":30.1,"dept":"성장"}]},{"name":"조정완","dept":"카페게이트","pw":"040710","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"한수빈","maxScore":3.7,"dept":"카페게이트"}]},{"name":"한수빈","dept":"카페게이트","pw":"950225","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"강지원","maxScore":5.5,"dept":"카페게이트"},{"evaluatee":"배단비","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"송익훈","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"양우준","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"오경석","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이준태","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"이현진","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"장탐이","maxScore":3.7,"dept":"카페게이트"},{"evaluatee":"조정완","maxScore":3.7,"dept":"카페게이트"}]},{"name":"한승준","dept":"슬로우캘리","pw":"940519","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"함수민","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"함수민","dept":"슬로우캘리","pw":"426644","tasks":[{"evaluatee":"김혜선","maxScore":4.0,"dept":"구매기획"},{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"홍주형","maxScore":1.8,"dept":"성장"},{"evaluatee":"성지원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"유희원","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이경기","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이송이","maxScore":5.5,"dept":"슬로우캘리"},{"evaluatee":"이수민","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"이진규","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"장지호","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"정주리","maxScore":3.7,"dept":"슬로우캘리"},{"evaluatee":"한승준","maxScore":3.7,"dept":"슬로우캘리"}]},{"name":"홍정호","dept":"인사/재무/법무/자산","pw":"116911","tasks":[{"evaluatee":"곽예은","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"김은주","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"이경원","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"임민혜","maxScore":7.1,"dept":"인사/재무/법무/자산"},{"evaluatee":"정의준","maxScore":12.5,"dept":"인사/재무/법무/자산"}]},{"name":"홍주형","dept":"성장","pw":"180100","tasks":[{"evaluatee":"박형선","maxScore":1.8,"dept":"성장"},{"evaluatee":"이주경","maxScore":1.8,"dept":"성장"},{"evaluatee":"황인규","maxScore":13.3,"dept":"성장"}]},{"name":"황인규","dept":"성장","pw":"131313","tasks":[{"evaluatee":"박형선","maxScore":40.4,"dept":"성장"},{"evaluatee":"이주경","maxScore":40.4,"dept":"성장"},{"evaluatee":"홍주형","maxScore":40.4,"dept":"성장"}]}];
 
 const ADMIN_NAME="신윤정", ADMIN_PW="171212";
 const GAS_URL="https://script.google.com/macros/s/AKfycbwlEbXBvN4EqhUOyghGAvfN1BojpUCuWaRGfHQeyQJhFPrERNleqeexW0yuOobHs6fpHg/exec";
@@ -518,35 +520,23 @@ function getCache(){try{return JSON.parse(localStorage.getItem(CACHE_KEY))||{}}c
 function getNicks(){try{return JSON.parse(localStorage.getItem(NICK_KEY))||{}}catch{return{}}}
 function getMyNick(n){return getNicks()[n]||'';}
 function hasEval(ev,ee){return !!(getCache()?.[ev]?.[ee]);}
-function markEvalDone(ev,ee,s1,s2,comment){
+function markEvalDone(ev,ee,score,comment){
   const d=getCache();if(!d[ev])d[ev]={};
-  d[ev][ee]={s1,s2,score:Math.round((s1+s2)*10)/10,comment,ts:Date.now()};
+  d[ev][ee]={score:Math.round(score*10)/10,comment,ts:Date.now()};
   localStorage.setItem(CACHE_KEY,JSON.stringify(d));
 }
 function saveNickLocal(name,nick){
   const n=getNicks();n[name]=nick;localStorage.setItem(NICK_KEY,JSON.stringify(n));
 }
 
-// 배점 분할: 파트1=내림(소수1자리), 파트2=총-파트1
-function splitScore(maxScore){
-  const p1=Math.floor(maxScore/2*10)/10;
-  const p2=Math.round((maxScore-p1)*10)/10;
-  return {p1,p2};
-}
-function updateSliderBg(el,val,max){
-  const p=max>0?val/max*100:0;
-  const col=el.id==='sl1'?'#2f54eb':'#fa8c16';
-  el.style.background=`linear-gradient(90deg,${col} ${p}%,#e4e8f4 ${p}%)`;
-}
-
-async function saveEvalData(ev,ee,s1,s2,comment,dept,maxScore){
-  const score=Math.round((s1+s2)*10)/10;
-  const payload={type:"eval",evaluator:ev,evaluatee:ee,dept,score,maxScore,
-    score_part1:s1,score_part2:s2,comment:comment||""};
+async function saveEvalData(ev,ee,score,comment,dept,maxScore){
+  const s=Math.round(score*10)/10;
+  const payload={type:"eval",evaluator:ev,evaluatee:ee,dept,score:s,maxScore,
+    score_part1:0,score_part2:s,comment:comment||""};
   try{
     await fetch(GAS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)});
   }catch(e){console.warn("시트 전송 실패",e);}
-  markEvalDone(ev,ee,s1,s2,comment);
+  markEvalDone(ev,ee,s,comment);
 }
 async function saveNickData(name,nick){
   const payload={type:"nick",name,nick};
@@ -636,57 +626,40 @@ function openEval(eeName){
   const te=EMPLOYEES.find(e=>e.name===eeName);
   document.getElementById('evalName').textContent=eeName;
   document.getElementById('evalMeta').textContent=(te?te.dept:'')+' · 최대 '+CT.maxScore+'점';
-  const {p1,p2}=splitScore(CT.maxScore);
   const prev=getCache()?.[CU.name]?.[eeName];
-  const initS1=prev?prev.s1:0;
-  const initS2=prev?prev.s2:0;
-  // part 1
-  document.getElementById('max1Lbl').textContent=p1;
-  document.getElementById('sl1MaxLbl').textContent=p1+'점';
-  const sl1=document.getElementById('sl1');
-  sl1.max=p1;sl1.step=0.1;sl1.value=initS1;
-  document.getElementById('v1').textContent=initS1.toFixed(1);
-  updateSliderBg(sl1,initS1,p1);
-  // part 2
-  document.getElementById('max2Lbl').textContent=p2;
-  document.getElementById('sl2MaxLbl').textContent=p2+'점';
+  const initScore=prev?(prev.score!=null?prev.score:(prev.s1||0)+(prev.s2||0)):0;
+  document.getElementById('max2Lbl').textContent=CT.maxScore;
+  document.getElementById('sl2MaxLbl').textContent=CT.maxScore;
   const sl2=document.getElementById('sl2');
-  sl2.max=p2;sl2.step=0.1;sl2.value=initS2;
-  document.getElementById('v2').textContent=initS2.toFixed(1);
-  updateSliderBg(sl2,initS2,p2);
-  // total
-  updateTotal(initS1,initS2);
+  sl2.max=CT.maxScore;sl2.step=0.1;sl2.value=initScore.toFixed(1);
+  updateTotal(initScore);
   document.getElementById('evalTotalMax').textContent='최대 '+CT.maxScore+'점';
   document.getElementById('evalComment').value=prev?(prev.comment||''):'';
   const btn=document.getElementById('btnSubmit');
   btn.disabled=false;btn.textContent='평가 제출';
   showScreen('evalScreen');
 }
-function onSlider1(val){
-  const v=Math.round(parseFloat(val)*10)/10;
-  document.getElementById('sl1').value=v;
-  document.getElementById('v1').textContent=v.toFixed(1);
-  updateSliderBg(document.getElementById('sl1'),v,parseFloat(document.getElementById('sl1').max));
-  updateTotal(v,parseFloat(document.getElementById('sl2').value));
+function clampScore(v,max){
+  if(isNaN(v))v=0;
+  if(v<0)v=0;
+  if(v>max)v=max;
+  return Math.round(v*10)/10;
 }
 function onSlider2(val){
-  const v=Math.round(parseFloat(val)*10)/10;
-  document.getElementById('sl2').value=v;
-  document.getElementById('v2').textContent=v.toFixed(1);
-  updateSliderBg(document.getElementById('sl2'),v,parseFloat(document.getElementById('sl2').max));
-  updateTotal(parseFloat(document.getElementById('sl1').value),v);
+  const max=parseFloat(document.getElementById('sl2').max);
+  const v=clampScore(parseFloat(val),max);
+  document.getElementById('sl2').value=v.toFixed(1);
+  updateTotal(v);
 }
-function updateTotal(s1,s2){
-  const total=Math.round((s1+s2)*10)/10;
-  document.getElementById('evalTotalNum').textContent=total.toFixed(1);
+function updateTotal(score){
+  document.getElementById('evalTotalNum').textContent=score.toFixed(1);
 }
 async function submitEval(){
-  const s1=Math.round(parseFloat(document.getElementById('sl1').value)*10)/10;
-  const s2=Math.round(parseFloat(document.getElementById('sl2').value)*10)/10;
+  const score=clampScore(parseFloat(document.getElementById('sl2').value),parseFloat(document.getElementById('sl2').max));
   const comment=document.getElementById('evalComment').value.trim();
   const btn=document.getElementById('btnSubmit');
   btn.textContent='전송 중...';btn.disabled=true;
-  await saveEvalData(CU.name,CT.evaluatee,s1,s2,comment,CT.dept,CT.maxScore);
+  await saveEvalData(CU.name,CT.evaluatee,score,comment,CT.dept,CT.maxScore);
   btn.textContent='평가 제출';btn.disabled=false;
   document.getElementById('completeName').textContent=CT.evaluatee;
   showScreen('completeScreen');
