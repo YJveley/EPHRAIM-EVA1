@@ -430,12 +430,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:"Noto S
           <div class="slider-lbl">점수 입력</div>
         </div>
         <div class="score-input-row">
-          <input type="number" id="sl2" class="score-input-box" inputmode="numeric" min="1" max="10" step="1" value=""
+          <input type="number" id="sl2" class="score-input-box" inputmode="numeric" min="0" max="10" step="1" value=""
                  placeholder="-" oninput="onScoreInput(this.value)" onblur="onScoreInput(this.value)">
           <span class="score-input-divider">/</span>
           <span class="score-input-max">10</span>
         </div>
-        <div class="score-input-hint">1 ~ 10점 사이, 정수로 입력 (소수점 평가 없음)</div>
+        <div class="score-input-hint">0 ~ 10점 사이, 정수로 입력 (소수점 평가 없음)</div>
       </div>
     </div>
 
@@ -600,7 +600,7 @@ function openEval(eeName){
 }
 function clampScore(v){
   v=Math.round(v);
-  if(isNaN(v)||v<1)v=1;
+  if(isNaN(v)||v<0)v=0;
   if(v>10)v=10;
   return v;
 }
